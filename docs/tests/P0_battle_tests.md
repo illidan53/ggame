@@ -61,7 +61,7 @@
 
 ---
 
-## T5. Turn Flow (5 cases)
+## T5. Turn Flow (6 cases)
 
 | ID | Scenario | Setup | Expected Result |
 |----|----------|-------|-----------------|

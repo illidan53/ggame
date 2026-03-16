@@ -167,7 +167,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 4.2 | Create Shadow Lord boss resource (3 phases) | P4-T2 | ⬜ |
 | 4.3 | Create elite enemy resources (Dark Knight, Fire Elemental) | P0-T6 (regression) | ⬜ |
 | 4.4 | Expand card pool to 30+ cards | Data validation | ⬜ |
-| 4.5 | Balance tuning pass | TODO: automated balance test TBD | ⬜ |
+| 4.5 | Balance tuning pass | P4-bal | ⬜ |
 
 ---
 

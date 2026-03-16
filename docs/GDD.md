@@ -88,6 +88,8 @@ Single run flow:
 | Block (Armor) | Resets to 0 at turn start; absorbs damage |
 | Gold | Earned from combat rewards; spent at shops |
 
+> **Rounding rules**: Damage calculations round **down** (floor). Healing calculations round **up** (ceil).
+
 ### 4.3 Status Effects (Buffs / Debuffs)
 
 | Effect | Type | Description |

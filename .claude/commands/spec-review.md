@@ -14,9 +14,7 @@ If a specific Phase was given as argument (e.g., "P0"):
 If no argument was given:
 - Read ALL test spec files in `docs/tests/`
 
-If `scripts/core/` or `resources/` directories contain `.gd` or `.tres` files, read those too (for Check 5).
-
-## Step 2: Execute 5 Checks
+## Step 2: Execute 4 Checks
 
 ### Check 1: GDD ↔ Test Spec Value Consistency
 
@@ -70,14 +68,6 @@ Pay special attention to:
    - Relic/Potion names
 3. **Constants**: Player max HP (80), energy per turn (3), cards drawn (5), starting deck composition
 
-### Check 5: Code ↔ Docs Consistency (conditional)
-
-Only execute if implementation code exists:
-
-1. Check `scripts/core/` for `.gd` files — extract hardcoded values and compare to GDD
-2. Check `resources/` for `.tres` files — extract exported values and compare to GDD
-3. If NO code files exist yet, report: "⏭️ SKIPPED — No implementation code found"
-
 ## Step 3: Generate Report
 
 Output the report directly in the conversation (do NOT write to a file). Use this format:
@@ -86,7 +76,7 @@ Output the report directly in the conversation (do NOT write to a file). Use thi
 # Spec Review Report — {YYYY-MM-DD}
 
 ## Summary
-- Checks passed: X/5
+- Checks passed: X/4
 - Issues found: Y (Critical: A, Warning: B, Info: C)
 
 ## Check 1: GDD ↔ Test Values — {✅ or ⚠️ or ❌}
@@ -115,11 +105,6 @@ Output the report directly in the conversation (do NOT write to a file). Use thi
 {If inconsistencies:}
 - ⚠️ {description of mismatch}
 
-## Check 5: Code ↔ Docs — {✅ or ⏭️ SKIPPED}
-
-{If code exists and mismatches found:}
-- ❌ {file}:{line} has `{value}`, GDD says `{expected}`
-
 ## Recommended Actions
 1. {highest priority fix — what file to change and how}
 2. ...
@@ -127,19 +112,18 @@ Output the report directly in the conversation (do NOT write to a file). Use thi
 
 ## Step 4: Severity Rules
 
-- **Critical** (❌): Numeric value conflict between GDD and test spec or code. Must fix before `/run-phase`.
+- **Critical** (❌): Numeric value conflict between GDD and test spec. Must fix before `/run-phase`.
 - **Warning** (⚠️): Missing coverage, orphan tests, naming inconsistency. Should fix but won't break automation.
 - **Info** (ℹ️): Style/format suggestions. Optional.
 
 Authority for fixes (per CLAUDE.md Data Value Authority):
 1. `docs/GDD.md` — highest authority, do NOT change unless user approves
 2. `docs/tests/P{N}_*.md` — update to match GDD
-3. Resource `.tres` files — update to match GDD
 
 ## Critical Rules
 
-- This skill is **READ-ONLY**. Do NOT modify any files.
-- Do NOT skip any of the 5 checks (mark as SKIPPED if not applicable).
+- This skill is **READ-ONLY**. Do NOT modify any files. Do NOT check implementation code.
+- Do NOT skip any of the 4 checks.
 - Use `date` command to get the current date for the report header.
 - If the report is very long, prioritize Critical issues at the top.
 - Get today's date via shell command, do NOT hardcode it.
