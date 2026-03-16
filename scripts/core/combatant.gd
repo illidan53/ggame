@@ -16,6 +16,10 @@ var status_effects: Dictionary = {}
 ## Whether this combatant is the player or an enemy
 var is_player: bool = false
 
+## Enemy-specific fields
+var enemy_data: EnemyData = null
+var pattern_index: int = 0
+
 func is_alive() -> bool:
 	return hp > 0
 

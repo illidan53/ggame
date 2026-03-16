@@ -5,6 +5,15 @@
 
 ---
 
+## [I-005] P0-T7: Enemy AI system — 2026-03-15
+- **Phase**: P0 (Task 0.7)
+- **Changes**: Implemented EnemyAI with pattern cycling, intent display, multi-enemy independence, conditional HP-based branching
+- **Files**: scripts/core/enemy_ai.gd, resources/enemies/enemy_data.gd, scripts/core/combatant.gd, tests/test_enemy_ai.gd
+- **Tests**: 4 new tests added, 35/35 total passing
+- **Commit**: `af4a03b`
+
+---
+
 ## [I-004] P0-T6: Turn flow state machine — 2026-03-15
 - **Phase**: P0 (Task 0.6)
 - **Changes**: Implemented TurnFlow with turn start/end, energy check, combat end conditions
