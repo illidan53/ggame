@@ -5,6 +5,15 @@
 
 ---
 
+## [I-002] P0-T4: Status effect system — 2026-03-15
+- **Phase**: P0 (Task 0.4)
+- **Changes**: Implemented StatusEffects with apply, tick/decay, thorns reflect, auto-block trigger
+- **Files**: scripts/core/status_effects.gd, tests/test_status_effects.gd
+- **Tests**: 6 new tests added, 18/18 total passing
+- **Commit**: `eb909f1`
+
+---
+
 ## [I-001] P0-T1~T3: Setup project, data models, damage/block calc — 2026-03-15
 - **Phase**: P0 (Tasks 0.1, 0.2, 0.3)
 - **Changes**: Created Godot project, installed GUT addon, implemented Combatant/CardInstance/CombatState data models, CombatCalc with damage formula and block logic
