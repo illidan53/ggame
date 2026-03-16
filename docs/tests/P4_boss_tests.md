@@ -31,10 +31,10 @@
 
 | ID | Enemy | Scenario | Expected Result |
 |----|-------|----------|-----------------|
-| T3.1 | Dark Knight | Turn 1-3 normal attack | Deals base damage |
-| T3.2 | Dark Knight | After turn 3 | Attack damage doubles |
-| T3.3 | Fire Elemental | Each turn | Applies 1 Vulnerable to player |
-| T3.4 | Fire Elemental | Takes damage | Standard damage/block rules apply |
+| T3.1 | Dark Knight | Turn 1-3 normal attack | Pattern: Attack(10) → Attack(10) → Defend(8), cycling |
+| T3.2 | Dark Knight | After turn 3 | Attack values double to 20 |
+| T3.3 | Fire Elemental | Turn 1 action | Attack(8) + apply 1 Vulnerable to player |
+| T3.4 | Fire Elemental | Turn 2 action | Attack(12), no Vulnerable applied |
 
 ---
 
@@ -47,6 +47,6 @@
 | T3. Elite Enemies | 4 |
 | **Total** | **12** |
 
-All 12 tests + all P0+P1+P2+P3 tests (89) must pass before P4 is complete.
+All 12 tests + all P0+P1+P2+P3 tests (92) must pass before P4 is complete.
 
 > Balance testing is in a separate file: [P4_balance_tests.md](P4_balance_tests.md)

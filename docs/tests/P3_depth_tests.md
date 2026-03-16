@@ -11,7 +11,7 @@
 |----|-------|---------|-----------------|
 | T1.1 | Iron Bracers | Combat start | Player gains 4 block at the start of each combat |
 | T1.2 | War Drum | Turn start | Player draws 6 cards instead of 5 |
-| T1.3 | Cracked Crown | Turn start | Player gains 4 energy but draws 4 cards instead of 5 |
+| T1.3 | Cracked Crown | Turn start | Player energy = 4 (base 3 + 1) but draws 4 cards (base 5 - 1) |
 | T1.4 | Blood Pendant | Combat start | Player heals 2 HP at start of each combat |
 | T1.5 | Rage Mask | Play Attack card | All Attack cards deal +3 damage |
 | T1.6 | Thorn Armor | Permanent | Player gains 3 Thorns status at combat start |
@@ -83,4 +83,4 @@
 | T4. Random Events | 8 |
 | **Total** | **23** |
 
-All 23 tests + all P0+P1+P2 tests (66) must pass before P3 is complete.
+All 23 tests + all P0+P1+P2 tests (69) must pass before P3 is complete.

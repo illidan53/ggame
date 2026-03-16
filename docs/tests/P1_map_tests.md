@@ -55,4 +55,4 @@
 | T4. Seed Determinism | 1 |
 | **Total** | **12** |
 
-All 12 tests + all P0 tests (37) must pass before P1 is complete.
+All 12 tests + all P0 tests (40) must pass before P1 is complete.

@@ -5,7 +5,7 @@
 
 ---
 
-## T1. Damage Calculation (6 cases)
+## T1. Damage Calculation (9 cases)
 
 | ID | Scenario | Setup | Expected Result |
 |----|----------|-------|-----------------|
@@ -21,6 +21,7 @@
 |----|----------|-----------------|
 | T1.7 | Block fully absorbs | Deal 5 damage to target with 8 block → Block = 3, HP unchanged |
 | T1.8 | Zero damage | Deal 0 base damage with no Strength → 0 damage dealt |
+| T1.9 | Weak + Vulnerable combo | Card deals 10, attacker Weak, target Vulnerable → floor(floor(10 × 0.75) × 1.5) = floor(7 × 1.5) = 10 |
 
 ---
 
@@ -85,13 +86,15 @@
 
 ---
 
-## T7. Targeting Rules (3 cases)
+## T7. Targeting Rules (5 cases)
 
 | ID | Scenario | Setup | Expected Result |
 |----|----------|-------|-----------------|
 | T7.1 | Single-target attack | Play Strike, 2 enemies on field | Must specify a target; damage applies only to that target |
 | T7.2 | AOE attack | Play Whirlwind (X=2), 3 enemies on field | All 3 enemies take 10 damage (2×5 each) |
 | T7.3 | Skill no target | Play Defend | No target selection needed; block applies to player |
+| T7.4 | X-cost card uses all energy | Play Whirlwind with 3 energy, 2 enemies | X=3, each enemy takes 15 damage (3×5), energy = 0 |
+| T7.5 | X-cost card with 0 energy | Play Whirlwind with 0 energy | X=0, no damage dealt, card is still played and discarded |
 
 ---
 
@@ -99,13 +102,13 @@
 
 | Category | Case Count |
 |----------|-----------|
-| T1. Damage Calculation | 8 |
+| T1. Damage Calculation | 9 |
 | T2. Block Calculation | 3 |
 | T3. Status Effects | 6 |
 | T4. Card Pile Management | 7 |
 | T5. Turn Flow | 6 |
 | T6. Enemy AI | 4 |
-| T7. Targeting Rules | 3 |
-| **Total** | **37** |
+| T7. Targeting Rules | 5 |
+| **Total** | **40** |
 
-All 37 tests must pass before P0 is considered complete.
+All 40 tests must pass before P0 is considered complete.

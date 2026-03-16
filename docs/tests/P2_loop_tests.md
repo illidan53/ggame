@@ -68,4 +68,4 @@
 | T5. Run State Persistence | 3 |
 | **Total** | **17** |
 
-All 17 tests + all P0+P1 tests (49) must pass before P2 is complete.
+All 17 tests + all P0+P1 tests (52) must pass before P2 is complete.

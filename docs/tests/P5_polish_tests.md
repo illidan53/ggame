@@ -45,7 +45,7 @@
 | T3. Data Integrity | 4 |
 | **Total** | **10** |
 
-All 10 tests + all prior tests (109) must pass before P5 is complete.
+All 10 tests + all prior tests (112) must pass before P5 is complete.
 
 ---
 
@@ -53,10 +53,10 @@ All 10 tests + all prior tests (109) must pass before P5 is complete.
 
 | Phase | Scope | New Tests | Cumulative |
 |-------|-------|-----------|-----------|
-| P0 | Battle | 37 | 37 |
-| P1 | Map | 12 | 49 |
-| P2 | Run loop | 17 | 66 |
-| P3 | Depth | 23 | 89 |
-| P4 | Boss/Elite | 12 | 101 |
-| P4-bal | Balance | 8 | 109 |
-| P5 | Polish | 10 | **119** |
+| P0 | Battle | 40 | 40 |
+| P1 | Map | 12 | 52 |
+| P2 | Run loop | 17 | 69 |
+| P3 | Depth | 23 | 92 |
+| P4 | Boss/Elite | 12 | 104 |
+| P4-bal | Balance | 8 | 112 |
+| P5 | Polish | 10 | **122** |

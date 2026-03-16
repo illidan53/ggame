@@ -110,7 +110,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | # | Task | Test Coverage | Done |
 |---|------|--------------|------|
 | 1.1 | Implement map data model (MapData, MapNode, MapEdge) | P1-T1 | ⬜ |
-| 1.2 | Implement map generator (layer rules, node type placement) | P1-T1 | ⬜ |
+| 1.2 | Implement map generator (layer rules, node type placement) | P1-T1, P1-T4 | ⬜ |
 | 1.3 | Implement path connectivity validation | P1-T2 | ⬜ |
 | 1.4 | Implement node selection logic (legal moves, no backtrack) | P1-T3 | ⬜ |
 | 1.5 | Build map scene (node graph rendering, click to select) | Manual test | ⬜ |

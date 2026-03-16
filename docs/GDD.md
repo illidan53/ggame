@@ -89,6 +89,11 @@ Single run flow:
 | Gold | Earned from combat rewards; spent at shops |
 
 > **Rounding rules**: Damage calculations round **down** (floor). Healing calculations round **up** (ceil).
+>
+> **Damage formula order**: `floor(floor((base + Strength) × WeakMultiplier) × VulnerableMultiplier)`
+> - Step 1: Add Strength to base damage
+> - Step 2: If attacker has Weak, multiply by 0.75 and floor
+> - Step 3: If target has Vulnerable, multiply by 1.5 and floor
 
 ### 4.3 Status Effects (Buffs / Debuffs)
 
@@ -244,8 +249,8 @@ Single run flow:
 
 | Name | HP | Special Ability |
 |------|----|----------------|
-| Dark Knight | 50 | Attacks double after turn 3 |
-| Fire Elemental | 40 | Applies 1 Vulnerable to player each turn |
+| Dark Knight | 50 | Pattern: Attack(10) → Attack(10) → Defend(8) → repeat. After turn 3, attack values double to 20. |
+| Fire Elemental | 40 | Pattern: Attack(8) + apply 1 Vulnerable → Attack(12) → repeat. |
 
 ### 8.3 Boss
 
