@@ -1,40 +1,166 @@
-# Key Documents
-- docs/GDD.md — Game design. Read relevant sections before implementing any feature.
-- docs/PLAN.md — Phased plan. Update after each completed task.
-- docs/SCRATCHPAD.md — Plan complex tasks here before coding.
+# DarkPath — Project Instructions
 
-# Development Workflow
+## Key Documents
+- `docs/GDD.md` — Game design rules. Read relevant sections before implementing any feature.
+- `docs/PLAN.md` — Phased development plan with TDD workflow. Update task status after completion.
+- `docs/tests/P{N}_*.md` — Test specifications per phase. These define WHAT to test (not HOW).
+- `docs/SCRATCHPAD.md` — Plan complex tasks here before coding (>3 files).
+- `docs/ITERATIONS.md` — Iteration log. Updated by `/checkpoint`.
 
-## Before writing any code, describe your approach and wait for approval. Ask clarifying questions if requirements are ambiguous
+## Current Date
+Today's date is 2026-03-15.
 
-## if a task requires changes to more than 3 files, stop and break it into smaller tasks first
+---
 
-## consider creating a `/decompose` command that takes a plan and outputs a list of small tasks to implement one at a time
+## Execution Modes
 
-## Describe your tech stack, folder structure, coding convention and any anti-patterns you'd like to avoid
+### Autonomous Mode (`/run-phase`)
+When triggered by `/run-phase P{N}`:
+- Skip approval steps — execute directly per PLAN.md
+- Follow TDD cycle: write tests (RED) → implement (GREEN) → fix until all pass
+- Call `/checkpoint` after each Task completes with all tests green
+- Stop and report if blocked (see Error Recovery)
 
-## use `/memory` to save any personal preferences that should persist across projects
+### Supervised Mode (default)
+All other interactions:
+- Describe approach before writing code, wait for approval
+- Ask clarifying questions if requirements are ambiguous
+- If a task requires changes to more than 3 files, stop and break it into smaller tasks first
 
-## create a `.claudeignore` file containing any files the agent shouldn't read or modify
+---
 
-## when there's a bug, start by writing a test that reproduces it, then fix it until the test passes
+## Tech Stack
+- **Engine**: Godot 4.x
+- **Language**: GDScript
+- **Test Framework**: GUT (Godot Unit Test)
+- **Platform**: Windows
+- **Data Format**: Godot Resources (.tres)
 
-## after writing code, list what could break and suggest tests to cover it
+## GDScript Coding Conventions
 
-## create a `/review-xyz` command that checks for correctness, edge cases, and consistency with codebase patterns
+### Naming
+- Functions / variables: `snake_case`
+- Classes / Nodes: `PascalCase`
+- Constants / enums: `UPPER_SNAKE_CASE`
+- Signals: `snake_case` (past tense: `card_played`, `turn_ended`)
+- File names: `snake_case.gd` matching the class name (e.g., `CombatState` → `combat_state.gd`)
 
-## create a `/test` command that invokes a test sub-agent that runs your test suite
+### File Organization
+- One class per file
+- Logic scripts in `scripts/` (no UI dependencies)
+- Scene scripts in `scenes/` (can reference Nodes)
+- Resource definitions in `resources/`
 
-## when I say something is wrong, ask clarifying questions before rewriting
+### Resource Pattern
+```gdscript
+# resources/cards/card_data.gd
+class_name CardData
+extends Resource
 
-## use the `/rewind` command to rollback changes, then give more specific feedback and try again
+@export var card_name: String
+@export var cost: int
+@export var card_type: String  # "Attack", "Skill", "Power"
+@export var rarity: String     # "Common", "Uncommon", "Rare"
+@export var base_damage: int
+@export var base_block: int
+@export var effect_text: String
+@export var keywords: Array[String]  # ["Exhaust", "Innate", etc.]
+@export var is_upgraded: bool = false
+```
 
-## use git worktrees to run parallel agent sessions on different tasks
+### Architecture Constraint (CRITICAL)
+> All game logic MUST be implemented as **pure functions** in `scripts/core/`.
+> These functions accept data parameters and return data results.
+> They MUST NOT reference Node, Scene tree, or any UI element.
 
-## use `claude --dangerously-skip-permissions` on a disposable environment to iterate faster while still being able to recover when things go wrong
+```gdscript
+# ✅ CORRECT — pure function, testable
+static func calculate_damage(base: int, strength: int, is_vulnerable: bool, is_weak: bool) -> int:
+    var dmg = base + strength
+    if is_weak:
+        dmg = int(dmg * 0.75)
+    if is_vulnerable:
+        dmg = int(dmg * 1.5)
+    return dmg
 
-## every time I correct youo, add a new rule to the CLAUDE.md file so it never happens again
+# ❌ WRONG — depends on Node tree, untestable
+func deal_damage():
+    var dmg = $Card.damage + $Player.strength
+    $Enemy.hp -= dmg
+```
 
-## convert any successful, repeatable prompt into a workflow by saving it as a slash command or a skill
+---
 
-## create sub-agents for any repetitive tasks that require a large context or specialized analysis. Reuse these agents without polluting your main context
+## TDD Rules
+
+### Test File Naming
+- File: `tests/test_{module}.gd` (e.g., `tests/test_damage_calc.gd`)
+- Class: `extends GutTest`
+- Function: `func test_{scenario}_{expected}():`
+
+### GUT Test Pattern
+```gdscript
+extends GutTest
+
+func test_base_damage_no_modifiers():
+    var result = CombatCalc.calculate_damage(6, 0, false, false)
+    assert_eq(result, 6, "Base damage should equal card value")
+
+func test_strength_adds_to_damage():
+    var result = CombatCalc.calculate_damage(6, 3, false, false)
+    assert_eq(result, 9, "Damage should be base + strength")
+```
+
+### Workflow
+1. Read test specification from `docs/tests/P{N}_*.md`
+2. Write test code FIRST (all tests should FAIL initially)
+3. Implement feature code until tests PASS
+4. Run ALL existing tests (regression) — must ALL pass
+5. Never modify a test to make it pass (unless the test spec itself is wrong)
+
+### Test Execution
+```bash
+godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
+```
+
+---
+
+## Error Recovery
+
+| Situation | Action |
+|-----------|--------|
+| Test fails after implementation | Analyze error → fix code → re-run (max 5 attempts per Task) |
+| 5 consecutive failures on same Task | STOP. Log the problem to `docs/SCRATCHPAD.md`. Wait for human input. |
+| Architecture conflict (need Node in logic) | STOP. Do not bypass. Report the conflict and suggest refactoring. |
+| Test spec appears wrong | STOP. Report to user. Do NOT modify test spec without approval. |
+| Task requires >3 new files | Plan in `docs/SCRATCHPAD.md` first, then implement incrementally. |
+
+---
+
+## Anti-Patterns (NEVER do these)
+
+- Skip writing tests and implement directly
+- Modify test expectations to make failing tests pass
+- Reference Node/Scene tree in `scripts/core/` logic files
+- Use `@onready` or `$NodePath` in logic classes
+- Commit code with failing tests
+- Push to remote with failing tests
+- Create files not specified in the current Task scope
+- Add features not in the current Phase's test specification
+
+---
+
+## Slash Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/run-phase P{N}` | Autonomous TDD cycle for an entire phase |
+| `/test` | Run all tests and report results |
+| `/checkpoint` | Record iteration + commit + push |
+
+---
+
+## Rules from User Feedback
+- When I say something is wrong, ask clarifying questions before rewriting
+- Every time I correct you, add a new rule to this file so it never happens again
+- When there's a bug, start by writing a test that reproduces it, then fix it until the test passes
