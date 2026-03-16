@@ -51,7 +51,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 | # | Task | Test Coverage | Done |
 |---|------|--------------|------|
-| 0.1 | Set up Godot project + install GUT addon | — | ⬜ |
+| 0.1 | Set up Godot project + install GUT addon (see detailed steps below) | — | ⬜ |
 | 0.2 | Implement combat data models (CombatState, Combatant, CardInstance) | P0-T1~T3 | ⬜ |
 | 0.3 | Implement damage/block calculation functions | P0-T1, P0-T2 | ⬜ |
 | 0.4 | Implement status effect system (apply, tick, stack) | P0-T3 | ⬜ |
@@ -62,6 +62,42 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 0.9 | Create starting deck card resources (Strike, Defend, Bash) | P0-T4 | ⬜ |
 | 0.10 | Create enemy resources (Slime, Goblin, Skeleton, Bat Swarm) | P0-T6 | ⬜ |
 | 0.11 | Build minimal battle scene (placeholder art) | Manual test | ⬜ |
+
+### Task 0.1 — Detailed Steps
+
+1. **Create `project.godot`** with project name "DarkPath", renderer settings
+2. **Create directory structure** per GDD Section 13:
+   ```
+   scripts/core/    — pure logic (no Node dependencies)
+   resources/cards/ — CardData .tres files
+   resources/enemies/ — EnemyData .tres files
+   resources/relics/
+   resources/potions/
+   scenes/battle/
+   scenes/map/
+   scenes/ui/
+   tests/           — GUT test files
+   addons/gut/      — GUT addon
+   assets/sprites/
+   assets/audio/
+   ```
+3. **Install GUT addon** from GitHub:
+   ```bash
+   curl -L https://github.com/bitwes/Gut/archive/refs/heads/main.zip -o /tmp/gut.zip
+   unzip -o /tmp/gut.zip -d /tmp/gut
+   mkdir -p addons
+   cp -r /tmp/gut/Gut-main/addons/gut addons/gut
+   rm -rf /tmp/gut.zip /tmp/gut
+   ```
+4. **Create `.gutconfig.json`**:
+   ```json
+   {
+     "dirs": ["res://tests/"],
+     "should_exit": true,
+     "log_level": 1
+   }
+   ```
+5. **Verify**: Run `godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit` — should exit with 0 tests, 0 failures
 
 ---
 

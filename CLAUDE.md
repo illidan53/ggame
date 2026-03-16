@@ -7,11 +7,6 @@
 - `docs/SCRATCHPAD.md` — Plan complex tasks here before coding (>3 files).
 - `docs/ITERATIONS.md` — Iteration log. Updated by `/checkpoint`.
 
-## Current Date
-Today's date is 2026-03-15.
-
----
-
 ## Execution Modes
 
 ### Autonomous Mode (`/run-phase`)
@@ -30,10 +25,11 @@ All other interactions:
 ---
 
 ## Tech Stack
-- **Engine**: Godot 4.x
+- **Engine**: Godot 4.x (v4.6.1)
+- **Godot Path**: `/opt/homebrew/bin/godot` (installed via `brew install --cask godot`)
 - **Language**: GDScript
 - **Test Framework**: GUT (Godot Unit Test)
-- **Platform**: Windows
+- **Platform**: macOS (dev) / Windows (target export)
 - **Data Format**: Godot Resources (.tres)
 
 ## GDScript Coding Conventions
@@ -139,6 +135,17 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 ---
 
+## Data Value Authority
+
+> When game values (damage, HP, costs, etc.) appear in multiple places, the **single source of truth** priority is:
+> 1. `docs/GDD.md` — highest authority
+> 2. `docs/tests/P{N}_*.md` — must match GDD
+> 3. Resource `.tres` files — must match GDD
+>
+> If you discover a discrepancy, update the lower-priority source to match GDD. If GDD itself seems wrong, STOP and ask the user.
+
+---
+
 ## Anti-Patterns (NEVER do these)
 
 - Skip writing tests and implement directly
@@ -159,6 +166,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | `/run-phase P{N}` | Autonomous TDD cycle for an entire phase |
 | `/test` | Run all tests and report results |
 | `/checkpoint` | Record iteration + commit + push |
+| `/spec-review [P{N}]` | Audit all docs for consistency (read-only). Optional phase filter. |
 
 ---
 

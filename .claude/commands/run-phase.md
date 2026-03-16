@@ -20,6 +20,15 @@ You are executing an autonomous TDD development phase. The argument is a Phase i
 
 For each unchecked Task in the Phase (in order):
 
+### 2-pre. Check if Task has tests
+- Look at the Task's "Test Coverage" column in PLAN.md
+- If the value is `—` (no test coverage), this is an **infrastructure task**:
+  - Skip steps 2b (RED) and 2c (GREEN)
+  - Execute the implementation directly per the Task description in PLAN.md
+  - Run existing tests to verify no regression
+  - Proceed to step 2e (checkpoint)
+- If the value references test cases (e.g., `P0-T1~T3`), follow the full TDD flow below
+
 ### 2a. Plan (if task touches >3 files)
 - Write implementation approach to `docs/SCRATCHPAD.md` under `## Implementation Plan: P{N}-T{M}`
 - Identify which test cases from the spec map to this Task
@@ -27,7 +36,7 @@ For each unchecked Task in the Phase (in order):
 ### 2b. Write Tests (RED)
 - Create or update test file(s) in `tests/` following the naming convention in CLAUDE.md
 - Each test case from the spec becomes a test function
-- Run `/test` to confirm the new tests FAIL (RED state)
+- Run the test suite (follow the steps in `.claude/commands/test.md`) to confirm the new tests FAIL (RED state)
 - If tests already pass without implementation, investigate — something may be wrong
 
 ### 2c. Implement (GREEN)
@@ -36,7 +45,7 @@ For each unchecked Task in the Phase (in order):
   - Pure functions in `scripts/core/` (no Node dependencies)
   - Resource definitions in `resources/`
   - snake_case files, PascalCase classes
-- Run `/test` after implementation
+- Run the test suite (follow the steps in `.claude/commands/test.md`) after implementation
 
 ### 2d. Fix Loop (smart retry)
 If tests fail after implementation:
@@ -51,7 +60,7 @@ If tests fail after implementation:
    - **Fix tried**: {1-sentence description of what you changed}
    ```
 4. Fix the implementation (NOT the test)
-5. Run `/test` again
+5. Run the test suite (follow the steps in `.claude/commands/test.md`) again
 
 **Stop condition — repeated same failure:**
 - After each failure, read the Active Error Log in SCRATCHPAD.md
@@ -68,12 +77,12 @@ If tests fail after implementation:
 When ALL tests pass (including regression from previous phases):
 - Remove the `## Active Error Log: P{N}-T{M}` section from `docs/SCRATCHPAD.md`
 - Remove any `## Implementation Plan: P{N}-T{M}` section from `docs/SCRATCHPAD.md`
-- Execute `/checkpoint` to record the iteration, commit, and push
+- Execute the checkpoint process (follow the steps in `.claude/commands/checkpoint.md`) to record the iteration, commit, and push
 
 ## Step 3: Phase Complete
 
 After all Tasks in the Phase are done:
-1. Verify all Phase tests pass one final time via `/test`
+1. Verify all Phase tests pass one final time (follow the steps in `.claude/commands/test.md`)
 2. Report completion summary:
    - Phase name
    - Number of Tasks completed

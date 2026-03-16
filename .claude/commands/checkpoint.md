@@ -30,11 +30,12 @@ Prepend a new entry at the top of `docs/ITERATIONS.md` (after the header, before
 Mark the completed task(s) as ✅ in `docs/PLAN.md`.
 
 ## Step 5: Git commit
-Stage and commit all changes:
+Stage relevant files and commit (do NOT use `git add -A` blindly):
 ```
-git add -A
+git add scripts/ tests/ resources/ scenes/ docs/ CLAUDE.md project.godot addons/ .gitignore .gutconfig.json .claudeignore
 git commit -m "P{N}-T{M}: {short description}"
 ```
+Note: Only stage files in the project directories. Review `git status` before committing to avoid including unintended files.
 Commit message format: `P{phase}-T{task}: {imperative verb} {what}` (e.g., "P0-T3: implement damage calculation")
 
 ## Step 6: Update commit hash
