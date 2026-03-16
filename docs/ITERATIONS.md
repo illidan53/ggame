@@ -5,6 +5,15 @@
 
 ---
 
+## [I-006] P0-T8: Targeting logic — 2026-03-15
+- **Phase**: P0 (Task 0.8)
+- **Changes**: Implemented Targeting with single-target, AOE, self-target, and X-cost card handling
+- **Files**: scripts/core/targeting.gd, tests/test_targeting.gd
+- **Tests**: 5 new tests added, 40/40 total passing
+- **Commit**: `4ca8021`
+
+---
+
 ## [I-005] P0-T7: Enemy AI system — 2026-03-15
 - **Phase**: P0 (Task 0.7)
 - **Changes**: Implemented EnemyAI with pattern cycling, intent display, multi-enemy independence, conditional HP-based branching
