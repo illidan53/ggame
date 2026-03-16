@@ -1,0 +1,21 @@
+# Godot
+.godot/
+*.import
+export_presets.cfg
+*.translation
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# Build
+build/
+export/
+
+# Claude Code
+.claude/plans/
