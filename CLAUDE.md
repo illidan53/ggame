@@ -129,11 +129,13 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 | Situation | Action |
 |-----------|--------|
-| Test fails after implementation | Analyze error → fix code → re-run (max 5 attempts per Task) |
-| 5 consecutive failures on same Task | STOP. Log the problem to `docs/SCRATCHPAD.md`. Wait for human input. |
+| Test fails after implementation | Log attempt to `docs/SCRATCHPAD.md` → analyze error → fix code → re-run |
+| Same test fails with same error 3 times in a row | STOP. Log `### STOPPED` to SCRATCHPAD.md. Wait for human input. |
+| Error changes between retries | Continue — different errors indicate progress. No fixed retry limit. |
 | Architecture conflict (need Node in logic) | STOP. Do not bypass. Report the conflict and suggest refactoring. |
 | Test spec appears wrong | STOP. Report to user. Do NOT modify test spec without approval. |
 | Task requires >3 new files | Plan in `docs/SCRATCHPAD.md` first, then implement incrementally. |
+| Session resumes after interruption | Read SCRATCHPAD.md error log first. Do NOT repeat already-failed approaches. |
 
 ---
 
