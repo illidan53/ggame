@@ -166,6 +166,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | `/run-phase P{N}` | Autonomous TDD cycle for an entire phase |
 | `/test` | Run all tests and report results |
 | `/checkpoint` | Record iteration + commit + push |
+| `/commit [msg]` | Auto-generate commit message from diff, commit + push |
 | `/spec-review [P{N}]` | Audit all docs for consistency (read-only). Optional phase filter. |
 
 ---
