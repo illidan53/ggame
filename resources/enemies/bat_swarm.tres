@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/enemies/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "Bat Swarm"
+hp = 15
+pattern = [{"type": "multi_attack", "value": 4, "hits": 2}, {"type": "buff", "buff": "Strength", "buff_stacks": 1}]
+alt_pattern = []
+hp_threshold_percent = 0.0

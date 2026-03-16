@@ -5,6 +5,15 @@
 
 ---
 
+## [I-007] P0-T9~T10: Card and enemy resources — 2026-03-15
+- **Phase**: P0 (Tasks 0.9, 0.10)
+- **Changes**: Created .tres resources for Strike, Defend, Bash cards and Slime, Goblin, Skeleton, Bat Swarm enemies
+- **Files**: resources/cards/{strike,defend,bash}.tres, resources/enemies/{slime,goblin,skeleton,bat_swarm}.tres
+- **Tests**: 0 new tests, 40/40 total passing (regression OK)
+- **Commit**: `48cacbf`
+
+---
+
 ## [I-006] P0-T8: Targeting logic — 2026-03-15
 - **Phase**: P0 (Task 0.8)
 - **Changes**: Implemented Targeting with single-target, AOE, self-target, and X-cost card handling

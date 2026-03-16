@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/enemies/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "Skeleton"
+hp = 24
+pattern = [{"type": "attack_debuff", "value": 5, "debuff": "Vulnerable", "debuff_stacks": 1}, {"type": "attack", "value": 10}]
+alt_pattern = []
+hp_threshold_percent = 0.0
