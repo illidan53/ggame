@@ -5,6 +5,15 @@
 
 ---
 
+## [I-003] P0-T5: Card pile manager — 2026-03-15
+- **Phase**: P0 (Task 0.5)
+- **Changes**: Implemented CardPileManager with draw, discard, reshuffle, exhaust, innate, and ethereal keyword handling
+- **Files**: scripts/core/card_pile_manager.gd, tests/test_card_pile.gd
+- **Tests**: 7 new tests added, 25/25 total passing
+- **Commit**: `5941899`
+
+---
+
 ## [I-002] P0-T4: Status effect system — 2026-03-15
 - **Phase**: P0 (Task 0.4)
 - **Changes**: Implemented StatusEffects with apply, tick/decay, thorns reflect, auto-block trigger
