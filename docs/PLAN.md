@@ -33,7 +33,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 | Phase | Scope | Test Spec | Status |
 |-------|-------|-----------|--------|
-| P0 | Core battle system | [P0_battle_tests.md](tests/P0_battle_tests.md) | ⬜ Not started |
+| P0 | Core battle system | [P0_battle_tests.md](tests/P0_battle_tests.md) | ✅ Complete |
 | P1 | Map system | [P1_map_tests.md](tests/P1_map_tests.md) | ⬜ Not started |
 | P2 | Single-run loop | [P2_loop_tests.md](tests/P2_loop_tests.md) | ⬜ Not started |
 | P3 | Relics + potions + events | [P3_depth_tests.md](tests/P3_depth_tests.md) | ⬜ Not started |
@@ -61,7 +61,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 0.8 | Implement targeting logic | P0-T7 | ✅ |
 | 0.9 | Create starting deck card resources (Strike, Defend, Bash) | P0-T4 | ✅ |
 | 0.10 | Create enemy resources (Slime, Goblin, Skeleton, Bat Swarm) | P0-T6 | ✅ |
-| 0.11 | Build minimal battle scene (placeholder art) | Manual test | ⬜ |
+| 0.11 | Build minimal battle scene (placeholder art) | Manual test | ⬜ (deferred — manual UI task) |
 
 ### Task 0.1 — Detailed Steps
 
