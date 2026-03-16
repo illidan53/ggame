@@ -5,6 +5,15 @@
 
 ---
 
+## [I-004] P0-T6: Turn flow state machine — 2026-03-15
+- **Phase**: P0 (Task 0.6)
+- **Changes**: Implemented TurnFlow with turn start/end, energy check, combat end conditions
+- **Files**: scripts/core/turn_flow.gd, tests/test_turn_flow.gd
+- **Tests**: 6 new tests added, 31/31 total passing
+- **Commit**: `fb07d2b`
+
+---
+
 ## [I-003] P0-T5: Card pile manager — 2026-03-15
 - **Phase**: P0 (Task 0.5)
 - **Changes**: Implemented CardPileManager with draw, discard, reshuffle, exhaust, innate, and ethereal keyword handling

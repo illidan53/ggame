@@ -56,7 +56,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 0.3 | Implement damage/block calculation functions | P0-T1, P0-T2 | ✅ |
 | 0.4 | Implement status effect system (apply, tick, stack) | P0-T3 | ✅ |
 | 0.5 | Implement card pile manager (draw, discard, shuffle, exhaust) | P0-T4 | ✅ |
-| 0.6 | Implement turn flow state machine | P0-T5 | ⬜ |
+| 0.6 | Implement turn flow state machine | P0-T5 | ✅ |
 | 0.7 | Implement enemy AI (pattern cycling, intent) | P0-T6 | ⬜ |
 | 0.8 | Implement targeting logic | P0-T7 | ⬜ |
 | 0.9 | Create starting deck card resources (Strike, Defend, Bash) | P0-T4 | ⬜ |
