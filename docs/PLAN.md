@@ -40,6 +40,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | P4 | Boss + elite enemies | [P4_boss_tests.md](tests/P4_boss_tests.md) | ✅ Complete |
 | P4-bal | Balance simulation | [P4_balance_tests.md](tests/P4_balance_tests.md) | ✅ Complete |
 | P5 | Save + UI polish + packaging | [P5_polish_tests.md](tests/P5_polish_tests.md) | ✅ Complete (core; 5.4-5.6 deferred) |
+| P6-QL | Q-learning balance analysis | test_q_learning.gd, test_balance_q.gd | ✅ Complete |
 
 ---
 

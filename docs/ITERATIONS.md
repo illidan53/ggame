@@ -5,6 +5,15 @@
 
 ---
 
+## [I-022] P6-QL: Q-learning balance analysis system — 2026-03-28
+- **Phase**: P6-QL (Q-learning balance)
+- **Changes**: Built multi-strategy balance testing framework with tabular Q-learning agent. Two Q-tables (combat + deckbuilding), epsilon-greedy policy, reward shaping. BalanceConfig stores expected ranges per strategy. BalanceRunner runs any strategy headless and produces comparison reports with card power rankings.
+- **Files**: scripts/core/balance_config.gd, scripts/core/q_state.gd, scripts/core/q_table.gd, scripts/core/q_agent.gd, scripts/core/q_run_simulator.gd, scripts/core/balance_runner.gd, tests/test_q_learning.gd, tests/test_balance_q.gd
+- **Tests**: 26 new tests added, 165/165 total passing
+- **Commit**: `2ae9406`
+
+---
+
 ## [I-021] P5-T2: Main menu + save integration — 2026-03-28
 - **Phase**: P5 (Task 5.2)
 - **Changes**: Built terminal-style main menu (New Game/Continue/Quit), integrated auto-save on node entry, permadeath save deletion on victory/defeat, set main menu as launch scene
