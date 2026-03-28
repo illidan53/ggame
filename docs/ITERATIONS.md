@@ -5,6 +5,15 @@
 
 ---
 
+## [I-011] P1-T4: Node selection logic — 2026-03-27
+- **Phase**: P1 (Task 1.4)
+- **Changes**: Implemented MapNavigator with legal move validation and backtrack prevention
+- **Files**: scripts/core/map_navigator.gd, tests/test_map.gd
+- **Tests**: 2 new tests added, 68/68 total passing
+- **Commit**: `982346d`
+
+---
+
 ## [I-010] P1-T3: Path connectivity validation — 2026-03-27
 - **Phase**: P1 (Task 1.3)
 - **Changes**: Added path connectivity tests (min connections, full reachability, no orphans); connectivity was already implemented in MapGenerator

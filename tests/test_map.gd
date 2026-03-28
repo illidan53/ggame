@@ -100,6 +100,31 @@ func test_T2_3_no_orphan_nodes():
 				"Layer %d node %d should have at least 1 incoming connection" % [
 					layer_idx + 1, node_idx])
 
+# --- T3: Node Selection ---
+
+func test_T3_1_legal_move_only():
+	var map = MapGenerator.generate(12345)
+	# Player at layer 1 (idx 0), node 0 — can only select connected nodes on layer 2
+	var node_a = map.layers[0][0]
+	var connected = node_a.connections
+	# Valid move: connected node
+	for conn in connected:
+		assert_true(MapNavigator.can_select_node(map, 0, 0, 1, conn),
+			"Should be able to select connected node %d on layer 2" % conn)
+	# Invalid move: unconnected node (find one not in connections)
+	for i in map.layers[1].size():
+		if i not in connected:
+			assert_false(MapNavigator.can_select_node(map, 0, 0, 1, i),
+				"Should NOT be able to select unconnected node %d on layer 2" % i)
+
+func test_T3_2_no_backtracking():
+	var map = MapGenerator.generate(12345)
+	# Player has advanced to layer 5 (idx 4) — cannot select any node on layers 1-4
+	for past_layer in range(0, 4):
+		for node_idx in map.layers[past_layer].size():
+			assert_false(MapNavigator.can_select_node(map, 4, 0, past_layer, node_idx),
+				"Should NOT be able to go back to layer %d" % (past_layer + 1))
+
 # --- T4: Seed Determinism ---
 
 func test_T4_1_same_seed_same_map():
