@@ -35,7 +35,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 |-------|-------|-----------|--------|
 | P0 | Core battle system | [P0_battle_tests.md](tests/P0_battle_tests.md) | ✅ Complete |
 | P1 | Map system | [P1_map_tests.md](tests/P1_map_tests.md) | ✅ Complete |
-| P2 | Single-run loop | [P2_loop_tests.md](tests/P2_loop_tests.md) | ⬜ Not started |
+| P2 | Single-run loop | [P2_loop_tests.md](tests/P2_loop_tests.md) | ✅ Complete |
 | P3 | Relics + potions + events | [P3_depth_tests.md](tests/P3_depth_tests.md) | ⬜ Not started |
 | P4 | Boss + elite enemies | [P4_boss_tests.md](tests/P4_boss_tests.md) | ⬜ Not started |
 | P4-bal | Balance simulation | [P4_balance_tests.md](tests/P4_balance_tests.md) | ⬜ Not started |
@@ -132,8 +132,8 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 2.4 | Implement rest site logic (heal 30%, upgrade card) | P2-T3 | ✅ |
 | 2.5 | Implement card upgrade system | P2-T3 | ✅ |
 | 2.6 | Create extended warrior card pool resources (~15 cards) | P2-T1 | ✅ |
-| 2.7 | Build reward screen, shop screen, rest site screen | Manual test | ⬜ |
-| 2.8 | Build summary screen (victory/defeat) | Manual test | ⬜ |
+| 2.7 | Build reward screen, shop screen, rest site screen | Manual test | ✅ |
+| 2.8 | Build summary screen (victory/defeat) | Manual test | ✅ |
 
 ---
 

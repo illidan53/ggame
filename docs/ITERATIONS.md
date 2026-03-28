@@ -5,6 +5,15 @@
 
 ---
 
+## [I-015] P2-T7~T8: Run loop UI screens — 2026-03-27
+- **Phase**: P2 (Tasks 2.7, 2.8)
+- **Changes**: Integrated reward selection, shop (buy/remove cards), rest site (heal/upgrade), victory/defeat summary, deck viewer, and gold tracking into map scene; battle scene now uses RunState deck
+- **Files**: scenes/map/map_scene.gd, scenes/battle/battle_scene.gd, scripts/core/run_state.gd
+- **Tests**: 0 new (manual UI), 85/85 total passing
+- **Commit**: `b3992d5`
+
+---
+
 ## [I-014] P2-T1~T6: Run loop systems + card pool — 2026-03-27
 - **Phase**: P2 (Tasks 2.1-2.6)
 - **Changes**: Implemented RunData, RewardGenerator, ShopGenerator, RestSite, CardUpgrade; created 12 new card resources (15 total); full reward/shop/rest/upgrade/serialization logic

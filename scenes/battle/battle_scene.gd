@@ -17,32 +17,35 @@ func _ready() -> void:
 var _use_run_state: bool = false
 
 func _start_combat() -> void:
-	var strike_data = load("res://resources/cards/strike.tres") as CardData
-	var defend_data = load("res://resources/cards/defend.tres") as CardData
-	var bash_data = load("res://resources/cards/bash.tres") as CardData
-
+	var player_hp := 80
 	var deck: Array[CardInstance] = []
-	var id_counter := 0
-	for i in 5:
-		var c = CardInstance.new(strike_data)
-		c.instance_id = id_counter; id_counter += 1
-		deck.append(c)
-	for i in 4:
-		var c = CardInstance.new(defend_data)
-		c.instance_id = id_counter; id_counter += 1
-		deck.append(c)
-	var bash_card = CardInstance.new(bash_data)
-	bash_card.instance_id = id_counter
-	deck.append(bash_card)
+	var enemy_datas: Array[EnemyData] = []
 
 	# Use RunState if available (map → battle transition)
-	var player_hp := 80
-	var enemy_datas: Array[EnemyData] = []
 	if RunState != null and RunState.map != null:
 		_use_run_state = true
 		player_hp = RunState.player_hp
+		deck = RunState.deck.duplicate()
 		var node = RunState.map.layers[RunState.current_layer][RunState.current_node]
 		enemy_datas = RunState.get_enemies_for_node(node.node_type)
+
+	# Fallback for standalone battle testing
+	if deck.is_empty():
+		var strike_data = load("res://resources/cards/strike.tres") as CardData
+		var defend_data = load("res://resources/cards/defend.tres") as CardData
+		var bash_data = load("res://resources/cards/bash.tres") as CardData
+		var id_counter := 0
+		for i in 5:
+			var c = CardInstance.new(strike_data)
+			c.instance_id = id_counter; id_counter += 1
+			deck.append(c)
+		for i in 4:
+			var c = CardInstance.new(defend_data)
+			c.instance_id = id_counter; id_counter += 1
+			deck.append(c)
+		var bash_card = CardInstance.new(bash_data)
+		bash_card.instance_id = id_counter
+		deck.append(bash_card)
 	if enemy_datas.is_empty():
 		enemy_datas = [
 			load("res://resources/enemies/slime.tres") as EnemyData,
