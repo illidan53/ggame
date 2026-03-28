@@ -1,23 +1,22 @@
 extends Control
 
 ## Terminal-style map scene — displays map and handles node selection
+## Uses RunState autoload to persist state across scene transitions
 
 @onready var output: RichTextLabel = %Output
 @onready var input: LineEdit = %Input
 
-var map: MapData
-var current_layer: int = -1  # -1 = haven't started yet
-var current_node: int = 0
-var combat_log: Array[String] = []
-
 func _ready() -> void:
 	input.text_submitted.connect(_on_input_submitted)
-	_start_run()
+	if RunState.map == null:
+		_start_run()
+	else:
+		# Returning from battle
+		_handle_combat_return()
 
 func _start_run() -> void:
-	map = MapGenerator.generate(randi())
-	current_layer = -1
-	combat_log.clear()
+	RunState.start_new_run()
+	RunState.combat_log.clear()
 	_log("=== NEW RUN ===")
 	_log("A 10-layer dungeon stretches before you...")
 	_log("Type 'go <node#>' to choose your path.")
@@ -25,24 +24,46 @@ func _start_run() -> void:
 	_show_available_nodes()
 	_refresh_display()
 
+func _handle_combat_return() -> void:
+	var result = RunState.last_combat_result
+	RunState.last_combat_result = ""
+	if result == "victory":
+		_log("[color=green]Victory! You press onward.[/color]")
+		_log("HP: %d/%d" % [RunState.player_hp, RunState.player_max_hp])
+		if RunState.current_layer < 9:
+			_log("")
+			_show_available_nodes()
+		else:
+			_log("")
+			_log("[color=green]=== RUN COMPLETE — YOU WIN! ===[/color]")
+			_log("Type 'restart' for a new run.")
+	elif result == "defeat":
+		_log("[color=red]You have been defeated...[/color]")
+		_log("")
+		_log("[color=red]=== GAME OVER ===[/color]")
+		_log("Type 'restart' for a new run.")
+	else:
+		# No result — just show available nodes
+		if RunState.current_layer < 9:
+			_show_available_nodes()
+	_refresh_display()
+
 func _show_available_nodes() -> void:
-	var next_layer = current_layer + 1
-	if next_layer >= map.layers.size():
+	var next_layer = RunState.current_layer + 1
+	if next_layer >= RunState.map.layers.size():
 		_log("You have reached the end of the map.")
 		return
 
 	_log("[color=yellow]Layer %d — Choose a node:[/color]" % (next_layer + 1))
 
-	if current_layer < 0:
-		# First layer: all nodes available
-		for i in map.layers[0].size():
-			var node = map.layers[0][i]
+	if RunState.current_layer < 0:
+		for i in RunState.map.layers[0].size():
+			var node = RunState.map.layers[0][i]
 			_log("  [%d] %s" % [i + 1, _format_node_type(node.node_type)])
 	else:
-		# Show only connected nodes
-		var source = map.layers[current_layer][current_node]
+		var source = RunState.map.layers[RunState.current_layer][RunState.current_node]
 		for conn in source.connections:
-			var node = map.layers[next_layer][conn]
+			var node = RunState.map.layers[next_layer][conn]
 			_log("  [%d] %s" % [conn + 1, _format_node_type(node.node_type)])
 
 func _on_input_submitted(text: String) -> void:
@@ -80,58 +101,54 @@ func _on_input_submitted(text: String) -> void:
 			_refresh_display()
 
 func _select_node(node_idx: int) -> void:
-	var next_layer = current_layer + 1
-	if next_layer >= map.layers.size():
+	var next_layer = RunState.current_layer + 1
+	if next_layer >= RunState.map.layers.size():
 		_log("Map complete.")
 		_refresh_display()
 		return
 
-	# Validate
-	if node_idx < 0 or node_idx >= map.layers[next_layer].size():
+	if node_idx < 0 or node_idx >= RunState.map.layers[next_layer].size():
 		_log("Invalid node number.")
 		_refresh_display()
 		return
 
-	if current_layer >= 0:
-		if not MapNavigator.can_select_node(map, current_layer, current_node, next_layer, node_idx):
+	if RunState.current_layer >= 0:
+		if not MapNavigator.can_select_node(RunState.map, RunState.current_layer, RunState.current_node, next_layer, node_idx):
 			_log("You can't reach that node from here.")
 			_refresh_display()
 			return
 
-	# Move
-	current_layer = next_layer
-	current_node = node_idx
-	var node = map.layers[current_layer][current_node]
+	RunState.current_layer = next_layer
+	RunState.current_node = node_idx
+	var node = RunState.map.layers[RunState.current_layer][RunState.current_node]
 	_log("")
-	_log(">> Entered Layer %d: [color=white]%s[/color]" % [current_layer + 1, _format_node_type(node.node_type)])
+	_log(">> Entered Layer %d: [color=white]%s[/color]" % [RunState.current_layer + 1, _format_node_type(node.node_type)])
 
-	# Handle node type
 	match node.node_type:
-		"combat":
-			_log("A group of enemies blocks your path!")
-			_log("[color=gray](Combat would start here — use battle scene)[/color]")
-		"elite":
-			_log("[color=red]A powerful foe appears![/color]")
-			_log("[color=gray](Elite combat would start here)[/color]")
+		"combat", "elite", "boss":
+			_log("Entering battle...")
+			_refresh_display()
+			# Transition to battle scene
+			get_tree().change_scene_to_file("res://scenes/battle/battle_scene.tscn")
+			return
 		"shop":
 			_log("[color=green]A merchant displays their wares.[/color]")
-			_log("[color=gray](Shop not yet implemented)[/color]")
+			_log("[color=gray](Shop not yet implemented — skipping)[/color]")
 		"rest":
 			_log("[color=cyan]A warm campfire crackles nearby.[/color]")
-			_log("[color=gray](Rest site not yet implemented)[/color]")
+			var heal = ceili(RunState.player_max_hp * 0.3)
+			RunState.player_hp = mini(RunState.player_hp + heal, RunState.player_max_hp)
+			_log("You rest and recover. HP: %d/%d" % [RunState.player_hp, RunState.player_max_hp])
 		"event":
 			_log("[color=yellow]Something unusual catches your eye...[/color]")
-			_log("[color=gray](Events not yet implemented)[/color]")
-		"boss":
-			_log("[color=red]The Shadow Lord awaits![/color]")
-			_log("[color=gray](Boss fight not yet implemented)[/color]")
+			_log("[color=gray](Events not yet implemented — skipping)[/color]")
 
-	if current_layer < 9:
+	if RunState.current_layer < 9:
 		_log("")
 		_show_available_nodes()
 	else:
 		_log("")
-		_log("[color=green]=== MAP COMPLETE ===[/color]")
+		_log("[color=green]=== RUN COMPLETE — YOU WIN! ===[/color]")
 		_log("Type 'restart' for a new run.")
 
 	_refresh_display()
@@ -139,14 +156,14 @@ func _select_node(node_idx: int) -> void:
 func _show_full_map() -> void:
 	_log("")
 	_log("[color=yellow]--- FULL MAP ---[/color]")
-	for layer_idx in map.layers.size():
-		var layer = map.layers[layer_idx]
-		var marker = " <<" if layer_idx == current_layer else ""
+	for layer_idx in RunState.map.layers.size():
+		var layer = RunState.map.layers[layer_idx]
+		var marker = " <<" if layer_idx == RunState.current_layer else ""
 		var nodes_str: Array[String] = []
 		for i in layer.size():
 			var node = layer[i]
 			var prefix = "[%d]" % (i + 1)
-			if layer_idx == current_layer and i == current_node:
+			if layer_idx == RunState.current_layer and i == RunState.current_node:
 				nodes_str.append("[color=green]%s %s[/color]" % [prefix, _format_node_type(node.node_type)])
 			else:
 				nodes_str.append("%s %s" % [prefix, _format_node_type(node.node_type)])
@@ -166,21 +183,21 @@ func _refresh_display() -> void:
 	var lines: Array[String] = []
 	lines.append("[color=gray]═══════════════════════════════════════[/color]")
 
-	# Current position
-	if current_layer >= 0:
-		var node = map.layers[current_layer][current_node]
-		lines.append("[color=yellow]Position:[/color] Layer %d — %s" % [
-			current_layer + 1, _format_node_type(node.node_type)])
+	if RunState.current_layer >= 0:
+		var node = RunState.map.layers[RunState.current_layer][RunState.current_node]
+		lines.append("[color=yellow]Position:[/color] Layer %d — %s  |  HP: %d/%d" % [
+			RunState.current_layer + 1, _format_node_type(node.node_type),
+			RunState.player_hp, RunState.player_max_hp])
 	else:
-		lines.append("[color=yellow]Position:[/color] Map entrance")
+		lines.append("[color=yellow]Position:[/color] Map entrance  |  HP: %d/%d" % [
+			RunState.player_hp, RunState.player_max_hp])
 
 	lines.append("[color=gray]═══════════════════════════════════════[/color]")
 
-	# Combat log (last 15 lines)
 	lines.append("")
-	var log_start = max(0, combat_log.size() - 15)
-	for i in range(log_start, combat_log.size()):
-		lines.append(combat_log[i])
+	var log_start = max(0, RunState.combat_log.size() - 15)
+	for i in range(log_start, RunState.combat_log.size()):
+		lines.append(RunState.combat_log[i])
 	lines.append("")
 
 	output.text = ""
@@ -188,4 +205,4 @@ func _refresh_display() -> void:
 	output.text = "\n".join(lines)
 
 func _log(msg: String) -> void:
-	combat_log.append(msg)
+	RunState.combat_log.append(msg)

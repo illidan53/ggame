@@ -34,7 +34,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | Phase | Scope | Test Spec | Status |
 |-------|-------|-----------|--------|
 | P0 | Core battle system | [P0_battle_tests.md](tests/P0_battle_tests.md) | ✅ Complete |
-| P1 | Map system | [P1_map_tests.md](tests/P1_map_tests.md) | ⬜ Not started |
+| P1 | Map system | [P1_map_tests.md](tests/P1_map_tests.md) | ✅ Complete |
 | P2 | Single-run loop | [P2_loop_tests.md](tests/P2_loop_tests.md) | ⬜ Not started |
 | P3 | Relics + potions + events | [P3_depth_tests.md](tests/P3_depth_tests.md) | ⬜ Not started |
 | P4 | Boss + elite enemies | [P4_boss_tests.md](tests/P4_boss_tests.md) | ⬜ Not started |
@@ -114,7 +114,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 1.3 | Implement path connectivity validation | P1-T2 | ✅ |
 | 1.4 | Implement node selection logic (legal moves, no backtrack) | P1-T3 | ✅ |
 | 1.5 | Build map scene (node graph rendering, click to select) | Manual test | ✅ |
-| 1.6 | Connect map → battle scene transition | Manual test | ⬜ |
+| 1.6 | Connect map → battle scene transition | Manual test | ✅ |
 
 ---
 

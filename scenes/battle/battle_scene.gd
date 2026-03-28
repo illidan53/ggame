@@ -14,6 +14,8 @@ func _ready() -> void:
 
 # --- Combat Setup ---
 
+var _use_run_state: bool = false
+
 func _start_combat() -> void:
 	var strike_data = load("res://resources/cards/strike.tres") as CardData
 	var defend_data = load("res://resources/cards/defend.tres") as CardData
@@ -33,11 +35,21 @@ func _start_combat() -> void:
 	bash_card.instance_id = id_counter
 	deck.append(bash_card)
 
-	var slime_data = load("res://resources/enemies/slime.tres") as EnemyData
-	var goblin_data = load("res://resources/enemies/goblin.tres") as EnemyData
-	var enemy_datas: Array[EnemyData] = [slime_data, goblin_data]
+	# Use RunState if available (map → battle transition)
+	var player_hp := 80
+	var enemy_datas: Array[EnemyData] = []
+	if RunState != null and RunState.map != null:
+		_use_run_state = true
+		player_hp = RunState.player_hp
+		var node = RunState.map.layers[RunState.current_layer][RunState.current_node]
+		enemy_datas = RunState.get_enemies_for_node(node.node_type)
+	if enemy_datas.is_empty():
+		enemy_datas = [
+			load("res://resources/enemies/slime.tres") as EnemyData,
+			load("res://resources/enemies/goblin.tres") as EnemyData,
+		]
 
-	state = BattleManager.create_combat(80, 3, deck, enemy_datas)
+	state = BattleManager.create_combat(player_hp, 3, deck, enemy_datas)
 
 	_log("=== COMBAT START ===")
 	_log("You face: %s" % _enemy_names())
@@ -70,8 +82,18 @@ func _show_combat_end() -> void:
 		_log("[color=green]*** VICTORY ***[/color]")
 	else:
 		_log("[color=red]*** DEFEAT ***[/color]")
-	_log("Type 'restart' to play again.")
-	_refresh_display()
+
+	if _use_run_state:
+		RunState.player_hp = state.player.hp
+		RunState.last_combat_result = state.combat_result
+		_log("Returning to map...")
+		_refresh_display()
+		# Delay briefly so player sees the result
+		await get_tree().create_timer(1.5).timeout
+		get_tree().change_scene_to_file("res://scenes/map/map_scene.tscn")
+	else:
+		_log("Type 'restart' to play again.")
+		_refresh_display()
 
 # --- Player Actions ---
 
