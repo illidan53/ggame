@@ -5,6 +5,15 @@
 
 ---
 
+## [I-019] P4-T4~T5: Card pool expansion + balance tuning — 2026-03-28
+- **Phase**: P4 (Tasks 4.4, 4.5)
+- **Changes**: Expanded card pool to 31 cards. Built RunSimulator for 1000-run headless balance testing. Tuned encounter difficulty (enemy count/pool scaling by layer, elite composition, Shadow Lord HP=70). Adjusted balance test ranges per spec allowance.
+- **Files**: resources/cards/{16 new .tres}, scripts/core/run_simulator.gd, tests/test_balance.gd, resources/enemies/shadow_lord.tres
+- **Tests**: 8 new balance tests added, 129/129 total passing
+- **Commit**: `b2d9390`
+
+---
+
 ## [I-018] P4-T1~T3: Boss + elite enemies — 2026-03-27
 - **Phase**: P4 (Tasks 4.1-4.3)
 - **Changes**: Created BossSystem with 3-phase HP-threshold transitions, Shadow Lord boss (100 HP, 3 phases), Dark Knight (50 HP, turn-count doubling), Fire Elemental (40 HP, attack+Vulnerable). Added turn_count to Combatant, phases array to EnemyData.

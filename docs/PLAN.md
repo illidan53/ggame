@@ -37,8 +37,8 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | P1 | Map system | [P1_map_tests.md](tests/P1_map_tests.md) | ✅ Complete |
 | P2 | Single-run loop | [P2_loop_tests.md](tests/P2_loop_tests.md) | ✅ Complete |
 | P3 | Relics + potions + events | [P3_depth_tests.md](tests/P3_depth_tests.md) | ✅ Complete |
-| P4 | Boss + elite enemies | [P4_boss_tests.md](tests/P4_boss_tests.md) | ⬜ Not started |
-| P4-bal | Balance simulation | [P4_balance_tests.md](tests/P4_balance_tests.md) | ⬜ Not started |
+| P4 | Boss + elite enemies | [P4_boss_tests.md](tests/P4_boss_tests.md) | ✅ Complete |
+| P4-bal | Balance simulation | [P4_balance_tests.md](tests/P4_balance_tests.md) | ✅ Complete |
 | P5 | Save + UI polish + packaging | [P5_polish_tests.md](tests/P5_polish_tests.md) | ⬜ Not started |
 
 ---
@@ -168,8 +168,8 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 4.3 | Create elite enemy resources (Dark Knight, Fire Elemental) | P4-T3 | ✅ |
 
 > **Resolved**: Dark Knight uses turn_count on Combatant + BossSystem.get_dark_knight_multiplier() for attack doubling after turn 3.
-| 4.4 | Expand card pool to 30+ cards | Data validation | ⬜ |
-| 4.5 | Balance tuning pass | P4-bal | ⬜ |
+| 4.4 | Expand card pool to 30+ cards | Data validation | ✅ |
+| 4.5 | Balance tuning pass | P4-bal | ✅ |
 
 ---
 

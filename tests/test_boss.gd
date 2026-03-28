@@ -6,7 +6,7 @@ func _make_shadow_lord(hp: int = 100) -> Combatant:
 	var data = load("res://resources/enemies/shadow_lord.tres") as EnemyData
 	var boss = Combatant.new()
 	boss.hp = hp
-	boss.max_hp = 100
+	boss.max_hp = 70
 	boss.enemy_data = data
 	return boss
 
