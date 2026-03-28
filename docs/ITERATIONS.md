@@ -5,6 +5,15 @@
 
 ---
 
+## [I-021] P5-T2: Main menu + save integration — 2026-03-28
+- **Phase**: P5 (Task 5.2)
+- **Changes**: Built terminal-style main menu (New Game/Continue/Quit), integrated auto-save on node entry, permadeath save deletion on victory/defeat, set main menu as launch scene
+- **Files**: scenes/menu/main_menu.gd, scenes/menu/main_menu.tscn, scenes/map/map_scene.gd, project.godot
+- **Tests**: 0 new (manual UI), 139/139 total passing
+- **Commit**: `81cc80d`
+
+---
+
 ## [I-020] P5-T1+T3: Save/load system + data integrity — 2026-03-28
 - **Phase**: P5 (Tasks 5.1, 5.3)
 - **Changes**: Implemented SaveSystem (save/load JSON, permadeath delete) and data integrity validation for all card/enemy resources

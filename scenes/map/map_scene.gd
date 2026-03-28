@@ -81,7 +81,8 @@ func _handle_combat_return() -> void:
 		_log("")
 		_log("[color=red]=== GAME OVER ===[/color]")
 		_log("HP: 0/%d | Gold: %d | Layer: %d" % [RunState.player_max_hp, RunState.gold, RunState.current_layer + 1])
-		_log("Type 'restart' for a new run.")
+		SaveSystem.delete_save()
+		_log("Type 'menu' to return to main menu.")
 		_refresh_display()
 	else:
 		current_state = State.MAP
@@ -96,7 +97,8 @@ func _post_reward() -> void:
 		_log("")
 		_log("[color=green]=== RUN COMPLETE — YOU WIN! ===[/color]")
 		_log("HP: %d/%d | Gold: %d" % [RunState.player_hp, RunState.player_max_hp, RunState.gold])
-		_log("Type 'restart' for a new run.")
+		SaveSystem.delete_save()
+		_log("Type 'menu' to return to main menu.")
 	else:
 		_log("")
 		_show_available_nodes()
@@ -145,6 +147,8 @@ func _handle_map_input(parts: Array) -> void:
 			_refresh_display()
 		"restart":
 			_start_run()
+		"menu":
+			get_tree().change_scene_to_file("res://scenes/menu/main_menu.tscn")
 		_:
 			_log("Unknown command. Type 'help'.")
 			_refresh_display()
@@ -263,6 +267,8 @@ func _select_node(node_idx: int) -> void:
 
 	RunState.current_layer = next_layer
 	RunState.current_node = node_idx
+	# Auto-save on node entry
+	_auto_save()
 	var node = RunState.map.layers[RunState.current_layer][RunState.current_node]
 	_log("")
 	_log(">> Entered Layer %d: [color=white]%s[/color]" % [RunState.current_layer + 1, _format_node_type(node.node_type)])
@@ -520,6 +526,20 @@ func _refresh_display() -> void:
 
 func _log(msg: String) -> void:
 	RunState.combat_log.append(msg)
+
+func _auto_save() -> void:
+	var run = RunData.new()
+	run.player_hp = RunState.player_hp
+	run.player_max_hp = RunState.player_max_hp
+	run.gold = RunState.gold
+	run.deck = RunState.deck
+	run.relics = RunState.relics
+	run.potions = RunState.potions
+	run.map = RunState.map
+	run.current_layer = RunState.current_layer
+	run.current_node = RunState.current_node
+	run.seed_value = 0  # Map already generated
+	SaveSystem.save_game(run)
 
 func _load_card_pool() -> Array[CardData]:
 	var pool: Array[CardData] = []

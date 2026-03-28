@@ -39,7 +39,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | P3 | Relics + potions + events | [P3_depth_tests.md](tests/P3_depth_tests.md) | ✅ Complete |
 | P4 | Boss + elite enemies | [P4_boss_tests.md](tests/P4_boss_tests.md) | ✅ Complete |
 | P4-bal | Balance simulation | [P4_balance_tests.md](tests/P4_balance_tests.md) | ✅ Complete |
-| P5 | Save + UI polish + packaging | [P5_polish_tests.md](tests/P5_polish_tests.md) | ⬜ Not started |
+| P5 | Save + UI polish + packaging | [P5_polish_tests.md](tests/P5_polish_tests.md) | ✅ Complete (core; 5.4-5.6 deferred) |
 
 ---
 
@@ -182,11 +182,11 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | # | Task | Test Coverage | Done |
 |---|------|--------------|------|
 | 5.1 | Implement save/load system | P5-T1, P5-T2 | ✅ |
-| 5.2 | Implement main menu (new game, continue, settings) | Manual test | ⬜ |
+| 5.2 | Implement main menu (new game, continue, settings) | Manual test | ✅ |
 | 5.3 | Data integrity validation for all .tres files | P5-T3 | ✅ |
-| 5.4 | UI polish (animations, transitions) | Manual test | ⬜ |
-| 5.5 | Audio integration | Manual test | ⬜ |
-| 5.6 | Windows export & packaging | Manual test | ⬜ |
+| 5.4 | UI polish (animations, transitions) | Manual test | ⬜ (deferred — needs graphical UI) |
+| 5.5 | Audio integration | Manual test | ⬜ (deferred — needs audio assets) |
+| 5.6 | Windows export & packaging | Manual test | ⬜ (deferred — needs export templates) |
 
 ---
 
