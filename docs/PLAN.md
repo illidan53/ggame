@@ -126,12 +126,12 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 | # | Task | Test Coverage | Done |
 |---|------|--------------|------|
-| 2.1 | Implement RunData (persistent state across nodes) | P2-T4 | ⬜ |
-| 2.2 | Implement combat reward generator (gold, card picks, rarity) | P2-T1 | ⬜ |
-| 2.3 | Implement shop logic (pricing, purchase, card removal) | P2-T2 | ⬜ |
-| 2.4 | Implement rest site logic (heal 30%, upgrade card) | P2-T3 | ⬜ |
-| 2.5 | Implement card upgrade system | P2-T3 | ⬜ |
-| 2.6 | Create extended warrior card pool resources (~15 cards) | P2-T1 | ⬜ |
+| 2.1 | Implement RunData (persistent state across nodes) | P2-T4 | ✅ |
+| 2.2 | Implement combat reward generator (gold, card picks, rarity) | P2-T1 | ✅ |
+| 2.3 | Implement shop logic (pricing, purchase, card removal) | P2-T2 | ✅ |
+| 2.4 | Implement rest site logic (heal 30%, upgrade card) | P2-T3 | ✅ |
+| 2.5 | Implement card upgrade system | P2-T3 | ✅ |
+| 2.6 | Create extended warrior card pool resources (~15 cards) | P2-T1 | ✅ |
 | 2.7 | Build reward screen, shop screen, rest site screen | Manual test | ⬜ |
 | 2.8 | Build summary screen (victory/defeat) | Manual test | ⬜ |
 

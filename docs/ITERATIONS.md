@@ -5,6 +5,15 @@
 
 ---
 
+## [I-014] P2-T1~T6: Run loop systems + card pool — 2026-03-27
+- **Phase**: P2 (Tasks 2.1-2.6)
+- **Changes**: Implemented RunData, RewardGenerator, ShopGenerator, RestSite, CardUpgrade; created 12 new card resources (15 total); full reward/shop/rest/upgrade/serialization logic
+- **Files**: scripts/core/{run_data,reward_generator,shop_generator,rest_site,card_upgrade}.gd, resources/cards/{12 new .tres}, tests/{test_rewards,test_shop,test_rest_site}.gd
+- **Tests**: 17 new tests added, 85/85 total passing
+- **Commit**: `58c129c`
+
+---
+
 ## [I-013] P1-T6: Map ↔ battle scene transition — 2026-03-27
 - **Phase**: P1 (Task 1.6)
 - **Changes**: Created RunState autoload for cross-scene state; wired map → battle transition on combat/elite/boss nodes; battle returns to map with HP persisted; set map as main scene

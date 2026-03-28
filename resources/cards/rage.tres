@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/cards/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+card_name = "Rage"
+cost = 0
+card_type = "Skill"
+rarity = "Common"
+base_damage = 0
+base_block = 0
+effect_text = "Gain 1 Strength."
+keywords = []
+is_upgraded = false
+target_mode = "self"
