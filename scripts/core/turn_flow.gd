@@ -2,12 +2,12 @@ class_name TurnFlow
 extends RefCounted
 
 ## Start the player's turn: reset block, restore energy, draw cards
-static func start_player_turn(state: CombatState) -> void:
+static func start_player_turn(state: CombatState, draw_count: int = 5) -> void:
 	state.turn_number += 1
 	CombatCalc.reset_block(state.player)
 	state.player.energy = state.player.max_energy
 	StatusEffects.apply_turn_start_effects(state.player)
-	CardPileManager.draw_cards(state, 5)
+	CardPileManager.draw_cards(state, draw_count)
 
 ## Check if a card can be played (enough energy)
 static func can_play_card(state: CombatState, card: CardInstance) -> bool:

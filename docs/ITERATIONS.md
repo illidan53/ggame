@@ -5,6 +5,15 @@
 
 ---
 
+## [I-017] P3-T7: Integrate relics/potions/events into UI — 2026-03-27
+- **Phase**: P3 (Task 3.7)
+- **Changes**: Wired relics into combat (combat-start effects, draw/energy modifiers), added potion command in battle, integrated events into map with branching choices, elite relic drops go to RunState
+- **Files**: scenes/battle/battle_scene.gd, scenes/map/map_scene.gd, scripts/core/run_state.gd, scripts/core/turn_flow.gd, scripts/core/battle_manager.gd
+- **Tests**: 0 new (manual UI), 109/109 total passing
+- **Commit**: `eff03dd`
+
+---
+
 ## [I-016] P3-T1~T6: Relics, potions, and events — 2026-03-27
 - **Phase**: P3 (Tasks 3.1-3.6)
 - **Changes**: Implemented RelicSystem (6 relics with combat-start/turn-start/attack triggers), PotionSystem (4 potions, carry limit 3, no energy cost), EventSystem (3 events with branching choices)

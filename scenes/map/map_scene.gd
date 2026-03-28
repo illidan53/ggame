@@ -5,7 +5,7 @@ extends Control
 @onready var output: RichTextLabel = %Output
 @onready var input: LineEdit = %Input
 
-enum State { MAP, REWARD_CARDS, SHOP, REST }
+enum State { MAP, REWARD_CARDS, SHOP, REST, EVENT }
 var current_state: State = State.MAP
 
 # Reward flow
@@ -15,8 +15,14 @@ var reward_cards: Array[CardData] = []
 var shop_cards: Array[CardData] = []
 var shop_prices: Dictionary = {}
 
+# Event flow
+var current_event: String = ""
+var event_choices: Array[Dictionary] = []
+
 func _ready() -> void:
 	input.text_submitted.connect(_on_input_submitted)
+	input.keep_editing_on_text_submit = true
+	input.grab_focus()
 	if RunState.map == null:
 		_start_run()
 	else:
@@ -47,8 +53,14 @@ func _handle_combat_return() -> void:
 		_log("Gained %d gold. (Total: %d)" % [gold, RunState.gold])
 
 		if node.node_type == "elite":
-			var relic = RewardGenerator.roll_relic_reward(randi())
-			_log("Found relic: [color=yellow]%s[/color]" % relic)
+			var available = RelicSystem.get_available_relics(
+				EventSystem.ALL_RELICS, RunState.relics)
+			if not available.is_empty():
+				var rng = RandomNumberGenerator.new()
+				rng.seed = randi()
+				var relic = available[rng.randi_range(0, available.size() - 1)]
+				RunState.relics.append(relic)
+				_log("Found relic: [color=yellow]%s[/color]" % relic)
 
 		# Offer card rewards
 		var pool = _load_card_pool()
@@ -107,6 +119,8 @@ func _on_input_submitted(text: String) -> void:
 			_handle_shop_input(parts)
 		State.REST:
 			_handle_rest_input(parts)
+		State.EVENT:
+			_handle_event_input(parts)
 
 func _handle_map_input(parts: Array) -> void:
 	match parts[0]:
@@ -270,8 +284,8 @@ func _select_node(node_idx: int) -> void:
 			_refresh_display()
 			return
 		"event":
-			_log("[color=yellow]Something unusual catches your eye...[/color]")
-			_log("[color=gray](Events not yet implemented — skipping)[/color]")
+			_enter_event()
+			return
 
 	if RunState.current_layer < 9:
 		_log("")
@@ -280,6 +294,54 @@ func _select_node(node_idx: int) -> void:
 		_log("")
 		_log("[color=green]=== RUN COMPLETE — YOU WIN! ===[/color]")
 		_log("Type 'restart' for a new run.")
+	_refresh_display()
+
+func _enter_event() -> void:
+	current_state = State.EVENT
+	var events = EventSystem.get_event_list()
+	current_event = events[randi() % events.size()]
+	event_choices = EventSystem.get_choices(current_event)
+	_log("[color=yellow]Something unusual catches your eye...[/color]")
+	_log("")
+	for i in event_choices.size():
+		_log("  [%d] %s" % [i + 1, event_choices[i]["text"]])
+	_refresh_display()
+
+func _handle_event_input(parts: Array) -> void:
+	var idx = parts[0].to_int() - 1
+	if idx < 0 or idx >= event_choices.size():
+		_log("Pick 1-%d." % event_choices.size())
+		_refresh_display()
+		return
+	var choice = event_choices[idx]
+	var data := {
+		"hp": RunState.player_hp,
+		"max_hp": RunState.player_max_hp,
+		"gold": RunState.gold,
+		"relics": RunState.relics,
+		"deck": RunState.deck,
+	}
+	var result = EventSystem.execute_choice(current_event, choice["id"], data, randi())
+	# Write back
+	RunState.player_hp = data["hp"]
+	RunState.gold = data["gold"]
+	# Log outcome
+	if result.has("relic") and result["relic"] != "":
+		RunState.relics.append(result["relic"])
+		_log("Gained relic: [color=yellow]%s[/color]" % result["relic"])
+	if result.has("card") and result["card"] != "":
+		_log("Gained card: [color=white]%s[/color]" % result["card"])
+	if result.get("blocked", false):
+		_log("[color=red]Not enough gold![/color]")
+		_refresh_display()
+		return
+	if result.get("upgrade", false):
+		_log("(Card upgrade not yet available in events)")
+	_log("HP: %d/%d | Gold: %d" % [RunState.player_hp, RunState.player_max_hp, RunState.gold])
+	current_state = State.MAP
+	if RunState.current_layer < 9:
+		_log("")
+		_show_available_nodes()
 	_refresh_display()
 
 func _enter_shop() -> void:
@@ -324,18 +386,94 @@ func _show_available_nodes() -> void:
 func _show_full_map() -> void:
 	_log("")
 	_log("[color=yellow]--- FULL MAP ---[/color]")
+	# Each node gets a fixed-width column slot for alignment
+	var col_width := 12
+	var max_nodes := 4
+
 	for layer_idx in RunState.map.layers.size():
 		var layer = RunState.map.layers[layer_idx]
-		var marker = " <<" if layer_idx == RunState.current_layer else ""
-		var nodes_str: Array[String] = []
-		for i in layer.size():
+		var node_count = layer.size()
+		# Center nodes within max_nodes columns
+		var padding = (max_nodes - node_count) * col_width / 2
+
+		# Build node row
+		var row = " ".repeat(padding)
+		for i in node_count:
 			var node = layer[i]
-			var prefix = "[%d]" % (i + 1)
-			if layer_idx == RunState.current_layer and i == RunState.current_node:
-				nodes_str.append("[color=green]%s %s[/color]" % [prefix, _format_node_type(node.node_type)])
+			var label = _short_type(node.node_type)
+			var is_current = (layer_idx == RunState.current_layer and i == RunState.current_node)
+			var is_past = (layer_idx < RunState.current_layer) or (layer_idx == RunState.current_layer and not is_current)
+			var is_future = layer_idx > RunState.current_layer or (RunState.current_layer == -1)
+
+			if is_current:
+				label = "[color=green][%s][/color]" % label
+			elif is_past:
+				label = "[color=gray]%s[/color]" % label
 			else:
-				nodes_str.append("%s %s" % [prefix, _format_node_type(node.node_type)])
-		_log("  L%02d: %s%s" % [layer_idx + 1, "  ".join(nodes_str), marker])
+				label = "%s" % label
+			# Pad each column
+			row += _center_text(label, col_width)
+
+		var layer_label = "L%02d" % (layer_idx + 1)
+		if layer_idx == RunState.current_layer:
+			layer_label = "[color=green]%s[/color]" % layer_label
+		_log("  %s %s" % [layer_label, row])
+
+		# Draw connection lines between this layer and next
+		if layer_idx < 9:
+			var next_layer = RunState.map.layers[layer_idx + 1]
+			var next_count = next_layer.size()
+			var next_padding = (max_nodes - next_count) * col_width / 2
+			# Build a connection line showing which nodes connect
+			var conn_chars: Array[String] = []
+			for _c in max_nodes * col_width + 4:
+				conn_chars.append(" ")
+
+			for i in node_count:
+				var src_x = padding + i * col_width + col_width / 2
+				var node = layer[i]
+				for conn in node.connections:
+					var dst_x = next_padding + conn * col_width + col_width / 2
+					# Draw a simple connector character at midpoint
+					var mid_x = (src_x + dst_x) / 2
+					if mid_x >= 0 and mid_x < conn_chars.size():
+						if src_x < dst_x:
+							conn_chars[mid_x] = "/"
+						elif src_x > dst_x:
+							conn_chars[mid_x] = "\\"
+						else:
+							conn_chars[mid_x] = "|"
+					# Also mark source and dest vertical
+					if src_x >= 0 and src_x < conn_chars.size():
+						conn_chars[src_x] = "|" if conn_chars[src_x] == " " else conn_chars[src_x]
+
+			var conn_line = "[color=gray]       %s[/color]" % "".join(conn_chars).rstrip(" ")
+			if conn_line.strip_edges() != "[color=gray][/color]":
+				_log(conn_line)
+
+func _short_type(node_type: String) -> String:
+	match node_type:
+		"combat": return "Bat"
+		"elite": return "[color=red]Eli[/color]"
+		"shop": return "[color=green]Shp[/color]"
+		"rest": return "[color=cyan]Rst[/color]"
+		"event": return "[color=yellow]Evt[/color]"
+		"boss": return "[color=red]BOS[/color]"
+		_: return "???"
+
+func _center_text(text: String, width: int) -> String:
+	# Strip BBCode for length calculation
+	var plain = text
+	while plain.find("[") != -1:
+		var start = plain.find("[")
+		var end = plain.find("]", start)
+		if end == -1:
+			break
+		plain = plain.substr(0, start) + plain.substr(end + 1)
+	var pad_total = max(0, width - plain.length())
+	var pad_left = pad_total / 2
+	var pad_right = pad_total - pad_left
+	return " ".repeat(pad_left) + text + " ".repeat(pad_right)
 
 func _show_deck() -> void:
 	_log("")

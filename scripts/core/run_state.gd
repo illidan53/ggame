@@ -9,6 +9,8 @@ var player_hp: int = 80
 var player_max_hp: int = 80
 var gold: int = 0
 var deck: Array[CardInstance] = []
+var relics: Array[String] = []
+var potions: Array[String] = []
 var combat_log: Array[String] = []
 
 ## Set after battle to signal result back to map
@@ -23,6 +25,8 @@ func start_new_run(seed_value: int = 0) -> void:
 	player_hp = 80
 	player_max_hp = 80
 	gold = 0
+	relics = [] as Array[String]
+	potions = [] as Array[String]
 	combat_log.clear()
 	last_combat_result = ""
 	# Build starting deck

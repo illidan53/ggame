@@ -22,9 +22,9 @@ static func create_combat(player_hp: int, max_energy: int, deck: Array[CardInsta
 	return state
 
 ## Start the player's turn: reset block, restore energy, draw cards
-static func begin_player_turn(state: CombatState) -> Array[String]:
+static func begin_player_turn(state: CombatState, draw_count: int = 5) -> Array[String]:
 	var log: Array[String] = []
-	TurnFlow.start_player_turn(state)
+	TurnFlow.start_player_turn(state, draw_count)
 	log.append("--- Turn %d ---" % state.turn_number)
 	log.append("Drew %d cards." % state.hand.size())
 	return log

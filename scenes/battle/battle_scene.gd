@@ -10,6 +10,8 @@ var combat_log: Array[String] = []
 
 func _ready() -> void:
 	input.text_submitted.connect(_on_input_submitted)
+	input.keep_editing_on_text_submit = true
+	input.grab_focus()
 	_start_combat()
 
 # --- Combat Setup ---
@@ -52,16 +54,31 @@ func _start_combat() -> void:
 			load("res://resources/enemies/goblin.tres") as EnemyData,
 		]
 
-	state = BattleManager.create_combat(player_hp, 3, deck, enemy_datas)
+	var max_energy := 3
+	if _use_run_state:
+		max_energy = RelicSystem.get_max_energy(3, RunState.relics)
+
+	state = BattleManager.create_combat(player_hp, max_energy, deck, enemy_datas)
+
+	# Apply relic combat-start effects
+	if _use_run_state:
+		RelicSystem.apply_combat_start(state, RunState.relics)
+		if state.player.block > 0:
+			_log("Relics: gained %d block." % state.player.block)
 
 	_log("=== COMBAT START ===")
 	_log("You face: %s" % _enemy_names())
+	if _use_run_state and not RunState.potions.is_empty():
+		_log("[color=gray]Potions: %s (type 'potion <#>' to use)[/color]" % ", ".join(RunState.potions))
 	_begin_player_turn()
 
 # --- Turn Flow (delegates to BattleManager) ---
 
 func _begin_player_turn() -> void:
-	var log = BattleManager.begin_player_turn(state)
+	var draw_count := 5
+	if _use_run_state:
+		draw_count = RelicSystem.get_draw_count(5, RunState.relics)
+	var log = BattleManager.begin_player_turn(state, draw_count)
 	_log("")
 	for msg in log:
 		_log(msg)
@@ -128,10 +145,36 @@ func _on_input_submitted(text: String) -> void:
 		"help":
 			_log("[color=yellow]Commands:[/color]")
 			_log("  play <card#> [enemy#]  — Play a card (1-indexed)")
+			_log("  potion <#>             — Use a potion (no energy cost)")
 			_log("  end                    — End your turn")
 			_log("  hand                   — Show hand details")
 			_log("  restart                — Start a new combat")
 			_log("  help                   — Show this help")
+			_refresh_display()
+
+		"potion":
+			if not _use_run_state or RunState.potions.is_empty():
+				_log("No potions available.")
+				_refresh_display()
+				return
+			if parts.size() < 2:
+				_log("[color=yellow]Potions:[/color]")
+				for i in RunState.potions.size():
+					_log("  [%d] %s" % [i + 1, RunState.potions[i]])
+				_refresh_display()
+				return
+			var potion_idx = parts[1].to_int() - 1
+			if potion_idx < 0 or potion_idx >= RunState.potions.size():
+				_log("Invalid potion number.")
+				_refresh_display()
+				return
+			var potion_name = RunState.potions[potion_idx]
+			PotionSystem.use_and_remove(RunState.potions, potion_idx, state)
+			_log("Used [color=cyan]%s[/color]!" % potion_name)
+			TurnFlow.check_combat_end(state)
+			if state.is_combat_over:
+				_show_combat_end()
+				return
 			_refresh_display()
 
 		"play":
