@@ -134,6 +134,8 @@ func _handle_map_input(parts: Array) -> void:
 			_select_node(parts[1].to_int() - 1)
 		"map":
 			_show_full_map()
+			_log("")
+			_show_available_nodes()
 			_refresh_display()
 		"help":
 			_log("[color=yellow]Commands:[/color]")
@@ -141,9 +143,13 @@ func _handle_map_input(parts: Array) -> void:
 			_log("  map         — Show full map")
 			_log("  deck        — View your deck")
 			_log("  restart     — Start a new run")
+			_log("")
+			_show_available_nodes()
 			_refresh_display()
 		"deck":
 			_show_deck()
+			_log("")
+			_show_available_nodes()
 			_refresh_display()
 		"restart":
 			_start_run()
