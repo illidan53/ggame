@@ -5,6 +5,15 @@
 
 ---
 
+## [I-012] P1-T5: Map scene — 2026-03-27
+- **Phase**: P1 (Task 1.5)
+- **Changes**: Built terminal-style map scene with node selection, full map view, and position tracking
+- **Files**: scenes/map/map_scene.gd, scenes/map/map_scene.tscn
+- **Tests**: 0 new (manual UI task), 68/68 total passing
+- **Commit**: `6a68d37`
+
+---
+
 ## [I-011] P1-T4: Node selection logic — 2026-03-27
 - **Phase**: P1 (Task 1.4)
 - **Changes**: Implemented MapNavigator with legal move validation and backtrack prevention

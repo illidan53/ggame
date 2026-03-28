@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scenes/battle/battle_scene.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/map/map_scene.gd" id="1"]
 
 [sub_resource type="FontVariation" id="FontVariation_1"]
 variation_embolden = 0.1
@@ -9,7 +9,7 @@ variation_embolden = 0.1
 default_font = SubResource("FontVariation_1")
 default_font_size = 30
 
-[node name="BattleScene" type="Control"]
+[node name="MapScene" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
