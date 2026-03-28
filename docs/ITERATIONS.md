@@ -5,6 +5,15 @@
 
 ---
 
+## [I-009] P1-T1~T2: Map data models and generator — 2026-03-27
+- **Phase**: P1 (Tasks 1.1, 1.2)
+- **Changes**: Created MapData, MapNode, MapGenerator with layer rules, fixed node types, connections, and seed determinism
+- **Files**: scripts/core/map_data.gd, scripts/core/map_node.gd, scripts/core/map_generator.gd, tests/test_map.gd
+- **Tests**: 7 new tests added, 63/63 total passing
+- **Commit**: `5543e2d`
+
+---
+
 ## [I-008] P0-T11: Battle scene + BattleManager — 2026-03-27
 - **Phase**: P0 (Task 0.11)
 - **Changes**: Extracted battle flow logic into pure BattleManager class, built terminal-style battle scene (RichTextLabel + LineEdit), wrote 14 integration tests covering full combat loop

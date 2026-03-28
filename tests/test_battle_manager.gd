@@ -55,6 +55,36 @@ func test_T11_2_init_multi_enemy():
 	assert_eq(state.enemies[0].enemy_data.enemy_name, "Slime")
 	assert_eq(state.enemies[1].enemy_data.enemy_name, "Goblin")
 
+# --- Test: Starting Deck Composition ---
+
+func test_T11_15_starting_deck_composition():
+	var deck = _make_deck()
+	assert_eq(deck.size(), 10, "Starting deck should have 10 cards")
+	var strike_count := 0
+	var defend_count := 0
+	var bash_count := 0
+	for card in deck:
+		match card.data.card_name:
+			"Strike": strike_count += 1
+			"Defend": defend_count += 1
+			"Bash": bash_count += 1
+	assert_eq(strike_count, 5, "Should have 5 Strikes")
+	assert_eq(defend_count, 4, "Should have 4 Defends")
+	assert_eq(bash_count, 1, "Should have 1 Bash")
+
+# --- Test: Card Resource Values ---
+
+func test_T11_16_card_resource_values_match_gdd():
+	# GDD Sec 5.2: Strike cost=1, dmg=6; Defend cost=1, block=5; Bash cost=2, dmg=14
+	assert_eq(_strike.cost, 1, "Strike cost should be 1")
+	assert_eq(_strike.base_damage, 6, "Strike damage should be 6")
+	assert_eq(_strike.card_type, "Attack", "Strike should be Attack type")
+	assert_eq(_defend.cost, 1, "Defend cost should be 1")
+	assert_eq(_defend.base_block, 5, "Defend block should be 5")
+	assert_eq(_defend.card_type, "Skill", "Defend should be Skill type")
+	assert_eq(_bash.cost, 2, "Bash cost should be 2")
+	assert_eq(_bash.base_damage, 14, "Bash damage should be 14")
+
 # --- Test: Begin Turn ---
 
 func test_T11_3_begin_turn_draws_and_restores():

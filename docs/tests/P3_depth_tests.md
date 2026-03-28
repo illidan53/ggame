@@ -27,7 +27,7 @@
 
 ---
 
-## T3. Potion System (5 cases)
+## T3. Potion System (7 cases)
 
 | ID | Scenario | Expected Result |
 |----|----------|-----------------|

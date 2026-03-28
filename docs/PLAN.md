@@ -109,8 +109,8 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 | # | Task | Test Coverage | Done |
 |---|------|--------------|------|
-| 1.1 | Implement map data model (MapData, MapNode, MapEdge) | P1-T1 | ⬜ |
-| 1.2 | Implement map generator (layer rules, node type placement) | P1-T1, P1-T4 | ⬜ |
+| 1.1 | Implement map data model (MapData, MapNode, MapEdge) | P1-T1 | ✅ |
+| 1.2 | Implement map generator (layer rules, node type placement) | P1-T1, P1-T4 | ✅ |
 | 1.3 | Implement path connectivity validation | P1-T2 | ⬜ |
 | 1.4 | Implement node selection logic (legal moves, no backtrack) | P1-T3 | ⬜ |
 | 1.5 | Build map scene (node graph rendering, click to select) | Manual test | ⬜ |
@@ -165,7 +165,9 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 |---|------|--------------|------|
 | 4.1 | Implement boss phase system (HP threshold transitions) | P4-T1 | ⬜ |
 | 4.2 | Create Shadow Lord boss resource (3 phases) | P4-T2 | ⬜ |
-| 4.3 | Create elite enemy resources (Dark Knight, Fire Elemental) | P0-T6 (regression) | ⬜ |
+| 4.3 | Create elite enemy resources (Dark Knight, Fire Elemental) | P4-T3 | ⬜ |
+
+> **⚠️ Design decision needed for Task 4.3**: GDD Sec 8.2 says Dark Knight attacks double "after turn 3" (turn-count trigger), but current EnemyAI only supports HP-threshold branching. Options: (A) extend EnemyAI with turn-count triggers, or (B) update GDD to use HP-threshold instead. Decide before starting P4.
 | 4.4 | Expand card pool to 30+ cards | Data validation | ⬜ |
 | 4.5 | Balance tuning pass | P4-bal | ⬜ |
 
