@@ -5,6 +5,15 @@
 
 ---
 
+## [I-016] P3-T1~T6: Relics, potions, and events — 2026-03-27
+- **Phase**: P3 (Tasks 3.1-3.6)
+- **Changes**: Implemented RelicSystem (6 relics with combat-start/turn-start/attack triggers), PotionSystem (4 potions, carry limit 3, no energy cost), EventSystem (3 events with branching choices)
+- **Files**: scripts/core/{relic_system,potion_system,event_system}.gd, tests/{test_relics,test_potions,test_events}.gd
+- **Tests**: 24 new tests added, 109/109 total passing
+- **Commit**: `75427a2`
+
+---
+
 ## [I-015] P2-T7~T8: Run loop UI screens — 2026-03-27
 - **Phase**: P2 (Tasks 2.7, 2.8)
 - **Changes**: Integrated reward selection, shop (buy/remove cards), rest site (heal/upgrade), victory/defeat summary, deck viewer, and gold tracking into map scene; battle scene now uses RunState deck

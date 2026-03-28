@@ -145,12 +145,12 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 | # | Task | Test Coverage | Done |
 |---|------|--------------|------|
-| 3.1 | Implement relic system (passive triggers, stacking) | P3-T1, P3-T2 | ⬜ |
-| 3.2 | Create relic resources (6 relics) | P3-T1 | ⬜ |
-| 3.3 | Implement potion system (use, carry limit 3) | P3-T3 | ⬜ |
-| 3.4 | Create potion resources (4 potions) | P3-T3 | ⬜ |
-| 3.5 | Implement event system (choices, outcomes) | P3-T4 | ⬜ |
-| 3.6 | Create event resources (3 events) | P3-T4 | ⬜ |
+| 3.1 | Implement relic system (passive triggers, stacking) | P3-T1, P3-T2 | ✅ |
+| 3.2 | Create relic resources (6 relics) | P3-T1 | ✅ |
+| 3.3 | Implement potion system (use, carry limit 3) | P3-T3 | ✅ |
+| 3.4 | Create potion resources (4 potions) | P3-T3 | ✅ |
+| 3.5 | Implement event system (choices, outcomes) | P3-T4 | ✅ |
+| 3.6 | Create event resources (3 events) | P3-T4 | ✅ |
 | 3.7 | Integrate relics/potions into battle UI | Manual test | ⬜ |
 
 ---
