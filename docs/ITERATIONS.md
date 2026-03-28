@@ -5,6 +5,15 @@
 
 ---
 
+## [I-020] P5-T1+T3: Save/load system + data integrity — 2026-03-28
+- **Phase**: P5 (Tasks 5.1, 5.3)
+- **Changes**: Implemented SaveSystem (save/load JSON, permadeath delete) and data integrity validation for all card/enemy resources
+- **Files**: scripts/core/save_system.gd, tests/test_save_system.gd, tests/test_data_integrity.gd
+- **Tests**: 10 new tests added, 139/139 total passing
+- **Commit**: `c6db35d`
+
+---
+
 ## [I-019] P4-T4~T5: Card pool expansion + balance tuning — 2026-03-28
 - **Phase**: P4 (Tasks 4.4, 4.5)
 - **Changes**: Expanded card pool to 31 cards. Built RunSimulator for 1000-run headless balance testing. Tuned encounter difficulty (enemy count/pool scaling by layer, elite composition, Shadow Lord HP=70). Adjusted balance test ranges per spec allowance.

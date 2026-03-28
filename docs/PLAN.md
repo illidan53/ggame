@@ -181,9 +181,9 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 | # | Task | Test Coverage | Done |
 |---|------|--------------|------|
-| 5.1 | Implement save/load system | P5-T1, P5-T2 | ⬜ |
+| 5.1 | Implement save/load system | P5-T1, P5-T2 | ✅ |
 | 5.2 | Implement main menu (new game, continue, settings) | Manual test | ⬜ |
-| 5.3 | Data integrity validation for all .tres files | P5-T3 | ⬜ |
+| 5.3 | Data integrity validation for all .tres files | P5-T3 | ✅ |
 | 5.4 | UI polish (animations, transitions) | Manual test | ⬜ |
 | 5.5 | Audio integration | Manual test | ⬜ |
 | 5.6 | Windows export & packaging | Manual test | ⬜ |
