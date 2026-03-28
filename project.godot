@@ -6,7 +6,7 @@
 
 config/name="DarkPath"
 config/description="Slay the Spire-inspired Roguelike Deckbuilder"
-run/main_scene=""
+run/main_scene="res://scenes/battle/battle_scene.tscn"
 config/features=PackedStringArray("4.4")
 
 [display]

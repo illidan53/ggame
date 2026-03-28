@@ -5,6 +5,15 @@
 
 ---
 
+## [I-008] P0-T11: Battle scene + BattleManager — 2026-03-27
+- **Phase**: P0 (Task 0.11)
+- **Changes**: Extracted battle flow logic into pure BattleManager class, built terminal-style battle scene (RichTextLabel + LineEdit), wrote 14 integration tests covering full combat loop
+- **Files**: scripts/core/battle_manager.gd, scenes/battle/battle_scene.gd, scenes/battle/battle_scene.tscn, tests/test_battle_manager.gd, project.godot
+- **Tests**: 14 new tests added, 54/54 total passing
+- **Commit**: `2adfdba`
+
+---
+
 ## [I-007] P0-T9~T10: Card and enemy resources — 2026-03-15
 - **Phase**: P0 (Tasks 0.9, 0.10)
 - **Changes**: Created .tres resources for Strike, Defend, Bash cards and Slime, Goblin, Skeleton, Bat Swarm enemies

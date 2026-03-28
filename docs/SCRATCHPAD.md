@@ -8,6 +8,39 @@
 
 ---
 
+## Implementation Plan: P0-T11 — BattleManager Refactor
+
+- **Task**: Extract battle flow logic from battle_scene.gd into pure BattleManager, write integration tests
+- **Files to create/modify**:
+  1. `scripts/core/battle_manager.gd` — NEW: pure logic, no Node/UI
+  2. `tests/test_battle_manager.gd` — NEW: integration tests
+  3. `scenes/battle/battle_scene.gd` — MODIFY: delegate to BattleManager
+- **Approach**:
+  - BattleManager is a static-function class (like all core scripts)
+  - Returns Array[String] combat log from each action for UI to display
+  - BattleScene becomes thin: input parsing → BattleManager call → render state
+- **API Design**:
+  ```
+  BattleManager.create_combat(player_hp, max_energy, deck, enemy_datas) -> CombatState
+  BattleManager.begin_player_turn(state) -> Array[String]
+  BattleManager.play_card(state, card_index, target_index) -> Array[String]
+  BattleManager.end_turn(state) -> Array[String]  # player end + enemy turns + check end
+  ```
+- **Test Cases**:
+  1. init — correct HP, deck size, enemy count
+  2. begin turn — energy restored, hand drawn, block reset
+  3. play attack — damage dealt, energy spent, card discarded
+  4. play defend — block gained
+  5. insufficient energy — rejected, state unchanged
+  6. invalid card/target — rejected
+  7. end turn — enemies act, debuffs tick
+  8. victory — all enemies dead
+  9. defeat — player HP <= 0
+  10. bash applies vulnerable — next attack deals more
+  11. full combat loop — play until victory or defeat
+
+---
+
 <!--
 TEMPLATE: Implementation Plan (used by /run-phase Step 2a)
 

@@ -61,7 +61,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 0.8 | Implement targeting logic | P0-T7 | ✅ |
 | 0.9 | Create starting deck card resources (Strike, Defend, Bash) | P0-T4 | ✅ |
 | 0.10 | Create enemy resources (Slime, Goblin, Skeleton, Bat Swarm) | P0-T6 | ✅ |
-| 0.11 | Build minimal battle scene (placeholder art) | Manual test | ⬜ (deferred — manual UI task) |
+| 0.11 | Build minimal battle scene (placeholder art) | P0-T11 (14 integration tests) | ✅ |
 
 ### Task 0.1 — Detailed Steps
 
