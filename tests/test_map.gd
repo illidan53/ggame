@@ -62,6 +62,44 @@ func test_T1_6_no_duplicate_types_per_layer():
 			assert_eq(types.size(), unique_types.size(),
 				"Layer %d should have no duplicate node types" % (i + 1))
 
+# --- T2: Path Connectivity ---
+
+func test_T2_1_minimum_connections():
+	var map = MapGenerator.generate(12345)
+	# Every node on layers 1-9 connects to at least 2 nodes on next layer
+	# Exception: layer 9→10 where boss is only 1 node, so min is 1
+	for layer_idx in 9:  # layers 0-8
+		var next_layer_size = map.layers[layer_idx + 1].size()
+		var min_connections = mini(2, next_layer_size)
+		for node in map.layers[layer_idx]:
+			assert_true(node.connections.size() >= min_connections,
+				"Layer %d node %d should connect to >= %d next-layer nodes, got %d" % [
+					layer_idx + 1, node.index, min_connections, node.connections.size()])
+
+func test_T2_2_full_reachability():
+	var map = MapGenerator.generate(12345)
+	# From any layer-1 node, there exists a path to the layer-10 boss
+	for start_node in map.layers[0]:
+		var reachable = _can_reach_boss(map, start_node)
+		assert_true(reachable,
+			"Layer 1 node %d should be able to reach the boss" % start_node.index)
+
+func test_T2_3_no_orphan_nodes():
+	var map = MapGenerator.generate(12345)
+	# Every node on layers 2-10 has at least 1 incoming connection
+	for layer_idx in range(1, 10):
+		var incoming_count := {}
+		for i in map.layers[layer_idx].size():
+			incoming_count[i] = 0
+		# Count incoming from previous layer
+		for node in map.layers[layer_idx - 1]:
+			for conn in node.connections:
+				incoming_count[conn] = incoming_count.get(conn, 0) + 1
+		for node_idx in incoming_count:
+			assert_true(incoming_count[node_idx] >= 1,
+				"Layer %d node %d should have at least 1 incoming connection" % [
+					layer_idx + 1, node_idx])
+
 # --- T4: Seed Determinism ---
 
 func test_T4_1_same_seed_same_map():
@@ -83,6 +121,20 @@ func test_T4_1_same_seed_same_map():
 					"Layer %d node %d connection %d should match" % [i + 1, j, k])
 
 # --- Helpers ---
+
+func _can_reach_boss(map: MapData, start_node: MapNode) -> bool:
+	# BFS from start_node through connections to see if we reach layer 10
+	var current_reachable := {start_node.index: true}
+	for layer_idx in range(0, 9):
+		var next_reachable := {}
+		for node_idx in current_reachable:
+			var node = map.layers[layer_idx][node_idx]
+			for conn in node.connections:
+				next_reachable[conn] = true
+		current_reachable = next_reachable
+		if current_reachable.is_empty():
+			return false
+	return not current_reachable.is_empty()
 
 func _get_layer_types(map: MapData, layer_idx: int) -> Array[String]:
 	var types: Array[String] = []

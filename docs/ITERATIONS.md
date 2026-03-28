@@ -5,6 +5,15 @@
 
 ---
 
+## [I-010] P1-T3: Path connectivity validation — 2026-03-27
+- **Phase**: P1 (Task 1.3)
+- **Changes**: Added path connectivity tests (min connections, full reachability, no orphans); connectivity was already implemented in MapGenerator
+- **Files**: tests/test_map.gd
+- **Tests**: 3 new tests added, 66/66 total passing
+- **Commit**: `1783f9d`
+
+---
+
 ## [I-009] P1-T1~T2: Map data models and generator — 2026-03-27
 - **Phase**: P1 (Tasks 1.1, 1.2)
 - **Changes**: Created MapData, MapNode, MapGenerator with layer rules, fixed node types, connections, and seed determinism
