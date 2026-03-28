@@ -19,6 +19,7 @@ var is_player: bool = false
 ## Enemy-specific fields
 var enemy_data: EnemyData = null
 var pattern_index: int = 0
+var turn_count: int = 0  # Tracks how many turns this enemy has taken
 
 func is_alive() -> bool:
 	return hp > 0

@@ -5,6 +5,15 @@
 
 ---
 
+## [I-018] P4-T1~T3: Boss + elite enemies — 2026-03-27
+- **Phase**: P4 (Tasks 4.1-4.3)
+- **Changes**: Created BossSystem with 3-phase HP-threshold transitions, Shadow Lord boss (100 HP, 3 phases), Dark Knight (50 HP, turn-count doubling), Fire Elemental (40 HP, attack+Vulnerable). Added turn_count to Combatant, phases array to EnemyData.
+- **Files**: scripts/core/boss_system.gd, scripts/core/combatant.gd, resources/enemies/{shadow_lord,dark_knight,fire_elemental}.tres, resources/enemies/enemy_data.gd, tests/test_boss.gd
+- **Tests**: 12 new tests added, 121/121 total passing
+- **Commit**: `a7cb2d5`
+
+---
+
 ## [I-017] P3-T7: Integrate relics/potions/events into UI — 2026-03-27
 - **Phase**: P3 (Task 3.7)
 - **Changes**: Wired relics into combat (combat-start effects, draw/energy modifiers), added potion command in battle, integrated events into map with branching choices, elite relic drops go to RunState
