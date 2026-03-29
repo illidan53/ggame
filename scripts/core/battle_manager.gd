@@ -21,12 +21,16 @@ static func create_combat(player_hp: int, max_energy: int, deck: Array[CardInsta
 	CardPileManager.init_piles(state, deck)
 	return state
 
-## Start the player's turn: reset block, restore energy, draw cards
+## Start the player's turn: reset block, restore energy, draw cards, apply turn-start powers
 static func begin_player_turn(state: CombatState, draw_count: int = 5) -> Array[String]:
 	var log: Array[String] = []
 	TurnFlow.start_player_turn(state, draw_count)
 	log.append("--- Turn %d ---" % state.turn_number)
 	log.append("Drew %d cards." % state.hand.size())
+	# Noxious Fumes: apply Poison to all enemies at turn start
+	var fumes = StatusEffects.apply_noxious_fumes(state)
+	if fumes > 0:
+		log.append("Noxious Fumes applies %d Poison to all enemies." % fumes)
 	return log
 
 ## Play a card from hand. Returns {success: bool, log: Array[String]}
@@ -97,6 +101,12 @@ static func _execute_enemy_turns(state: CombatState) -> Array[String]:
 		if not enemy.is_alive():
 			continue
 		CombatCalc.reset_block(enemy)
+		# Poison ticks at the start of the enemy's turn (bypasses block)
+		var poison_dmg = StatusEffects.apply_poison(enemy)
+		if poison_dmg > 0:
+			log.append("%s takes %d Poison damage." % [enemy.enemy_data.enemy_name, poison_dmg])
+			if not enemy.is_alive():
+				continue
 		var intent = EnemyAI.get_intent(enemy)
 		log.append_array(_execute_enemy_intent(state, enemy, intent))
 		EnemyAI.advance_pattern(enemy)

@@ -74,6 +74,7 @@ static func evaluate(count: int, agent: QAgent, base_seed: int = 0) -> Dictionar
 			if outcome == "victory":
 				card_presence[card_name]["wins"] += 1
 
+		var max_layer = RunData.TOTAL_ACTS * 10
 		if outcome == "victory":
 			wins += 1
 			boss_wins += 1
@@ -82,7 +83,7 @@ static func evaluate(count: int, agent: QAgent, base_seed: int = 0) -> Dictionar
 			deaths_by_layer[layer] = deaths_by_layer.get(layer, 0) + 1
 			total_depth += layer
 			failed_runs += 1
-			if layer == 10:
+			if layer == max_layer:
 				reached_boss += 1
 
 	agent.epsilon = saved_epsilon
@@ -99,7 +100,7 @@ static func evaluate(count: int, agent: QAgent, base_seed: int = 0) -> Dictionar
 		"card_presence": card_presence,
 	}
 
-## Simulate a single run with Q-agent decisions.
+## Simulate a single run with Q-agent decisions across 3 acts.
 static func _simulate_run(agent: QAgent, seed_value: int, card_pool: Array[CardData]) -> Dictionary:
 	var rng = RandomNumberGenerator.new()
 	rng.seed = seed_value
@@ -107,115 +108,120 @@ static func _simulate_run(agent: QAgent, seed_value: int, card_pool: Array[CardD
 	var run = RunData.create_new(seed_value)
 	var deckbuild_transitions: Array = []
 
-	var current_node_idx := rng.randi_range(0, run.map.layers[0].size() - 1)
-	run.current_layer = 0
-	run.current_node = current_node_idx
+	for act in RunData.TOTAL_ACTS:
+		run.current_act = act + 1
+		if act > 0:
+			run.player_hp = RestSite.rest(run.player_hp, run.player_max_hp)
+		run.map = MapGenerator.generate(seed_value + act * 31337)
+		var current_node_idx := rng.randi_range(0, run.map.layers[0].size() - 1)
+		run.current_layer = 0
+		run.current_node = current_node_idx
 
-	for layer_idx in 10:
-		run.current_layer = layer_idx
-		var node = run.map.layers[layer_idx][run.current_node]
+		for layer_idx in 10:
+			run.current_layer = layer_idx
+			var global_layer = act * 10 + layer_idx + 1
+			var node = run.map.layers[layer_idx][run.current_node]
 
-		match node.node_type:
-			"combat", "elite", "boss":
-				var enemies = RunSimulator._get_enemies_for_node_at_layer(node.node_type, layer_idx, rng)
-				var survived = _simulate_combat_with_learning(run, enemies, agent)
-				if not survived:
-					return _make_result("defeat", layer_idx + 1, deckbuild_transitions, run)
+			match node.node_type:
+				"combat", "elite", "boss":
+					var enemies = RunSimulator._get_enemies_for_act(node.node_type, run.current_act, layer_idx, rng)
+					var survived = _simulate_combat_with_learning(run, enemies, agent)
+					if not survived:
+						return _make_result("defeat", global_layer, deckbuild_transitions, run)
 
-				run.gold += RewardGenerator.roll_gold(node.node_type, rng.randi())
+					run.gold += RewardGenerator.roll_gold(node.node_type, rng.randi())
 
-				if not card_pool.is_empty():
-					var rewards = RewardGenerator.roll_card_rewards(card_pool, node.node_type, rng.randi())
-					if not rewards.is_empty():
-						var state_key = QState.encode_deckbuild(run)
-						var pick_idx = agent.choose_card_pick(rewards, run)
-						var action_name: String
-						if pick_idx >= 0 and pick_idx < rewards.size():
-							action_name = rewards[pick_idx].card_name
-							var card = CardInstance.new(rewards[pick_idx])
-							card.instance_id = rng.randi()
-							run.deck.append(card)
-						else:
-							action_name = "skip"
-						deckbuild_transitions.append({"state": state_key, "action": action_name})
-
-				if node.node_type == "elite":
-					var available = RelicSystem.get_available_relics(EventSystem.ALL_RELICS, run.relics)
-					if not available.is_empty():
-						run.relics.append(available[rng.randi_range(0, available.size() - 1)])
-
-			"shop":
-				if run.gold >= 30 and not card_pool.is_empty():
-					var prices = ShopGenerator.generate_prices(rng.randi())
-					var affordable_rarity = ""
-					if run.gold >= prices["Common"]:
-						affordable_rarity = "Common"
-					if run.gold >= prices["Uncommon"] and rng.randf() < 0.3:
-						affordable_rarity = "Uncommon"
-					if affordable_rarity != "":
-						var filtered = card_pool.filter(func(c): return c.rarity == affordable_rarity)
-						if not filtered.is_empty():
-							var shop_offers: Array[CardData] = []
-							for j in mini(3, filtered.size()):
-								shop_offers.append(filtered[rng.randi_range(0, filtered.size() - 1)])
+					if not card_pool.is_empty():
+						var rewards = RewardGenerator.roll_card_rewards(card_pool, node.node_type, rng.randi())
+						if not rewards.is_empty():
 							var state_key = QState.encode_deckbuild(run)
-							var pick_idx = agent.choose_card_pick(shop_offers, run)
+							var pick_idx = agent.choose_card_pick(rewards, run)
 							var action_name: String
-							if pick_idx >= 0 and pick_idx < shop_offers.size():
-								action_name = shop_offers[pick_idx].card_name
-								run.gold -= prices[affordable_rarity]
-								var card = CardInstance.new(shop_offers[pick_idx])
+							if pick_idx >= 0 and pick_idx < rewards.size():
+								action_name = rewards[pick_idx].card_name
+								var card = CardInstance.new(rewards[pick_idx])
 								card.instance_id = rng.randi()
 								run.deck.append(card)
 							else:
 								action_name = "skip"
 							deckbuild_transitions.append({"state": state_key, "action": action_name})
 
-			"rest":
-				var state_key = QState.encode_rest(run)
-				var choice = agent.choose_rest_action(run)
-				deckbuild_transitions.append({"state": state_key, "action": choice})
-				if choice == "rest":
-					run.player_hp = RestSite.rest(run.player_hp, run.player_max_hp)
-				else:
-					var upgradeable: Array = []
-					for i in run.deck.size():
-						if not run.deck[i].data.is_upgraded:
-							upgradeable.append(i)
-					if not upgradeable.is_empty():
-						var idx = upgradeable[rng.randi_range(0, upgradeable.size() - 1)]
-						run.deck[idx].data = CardUpgrade.upgrade(run.deck[idx].data)
+					if node.node_type == "elite":
+						var available = RelicSystem.get_available_relics(EventSystem.ALL_RELICS, run.relics)
+						if not available.is_empty():
+							run.relics.append(available[rng.randi_range(0, available.size() - 1)])
 
-			"event":
-				var events = EventSystem.get_event_list()
-				var event_id = events[rng.randi_range(0, events.size() - 1)]
-				var choices = EventSystem.get_choices(event_id)
-				var choice = choices[rng.randi_range(0, choices.size() - 1)]
-				var data := {
-					"hp": run.player_hp, "max_hp": run.player_max_hp,
-					"gold": run.gold, "relics": run.relics, "deck": run.deck,
-				}
-				EventSystem.execute_choice(event_id, choice["id"], data, rng.randi())
-				run.player_hp = data["hp"]
-				run.gold = maxi(data["gold"], 0)
-				if run.player_hp <= 0:
-					return _make_result("defeat", layer_idx + 1, deckbuild_transitions, run)
+				"shop":
+					if run.gold >= 30 and not card_pool.is_empty():
+						var prices = ShopGenerator.generate_prices(rng.randi())
+						var affordable_rarity = ""
+						if run.gold >= prices["Common"]:
+							affordable_rarity = "Common"
+						if run.gold >= prices["Uncommon"] and rng.randf() < 0.3:
+							affordable_rarity = "Uncommon"
+						if affordable_rarity != "":
+							var filtered = card_pool.filter(func(c): return c.rarity == affordable_rarity)
+							if not filtered.is_empty():
+								var shop_offers: Array[CardData] = []
+								for j in mini(3, filtered.size()):
+									shop_offers.append(filtered[rng.randi_range(0, filtered.size() - 1)])
+								var state_key = QState.encode_deckbuild(run)
+								var pick_idx = agent.choose_card_pick(shop_offers, run)
+								var action_name: String
+								if pick_idx >= 0 and pick_idx < shop_offers.size():
+									action_name = shop_offers[pick_idx].card_name
+									run.gold -= prices[affordable_rarity]
+									var card = CardInstance.new(shop_offers[pick_idx])
+									card.instance_id = rng.randi()
+									run.deck.append(card)
+								else:
+									action_name = "skip"
+								deckbuild_transitions.append({"state": state_key, "action": action_name})
 
-		# Navigate to next layer
-		if layer_idx < 9:
-			var source = run.map.layers[layer_idx][run.current_node]
-			if source.connections.is_empty():
-				break
-			var next_layer_nodes = run.map.layers[layer_idx + 1]
-			var conn_idx = agent.choose_map_path(run, source.connections, next_layer_nodes)
-			var state_key = QState.encode_map(run)
-			var node_type := "combat"
-			if conn_idx < next_layer_nodes.size():
-				node_type = next_layer_nodes[conn_idx].node_type
-			deckbuild_transitions.append({"state": state_key, "action": node_type + ":" + str(conn_idx)})
-			run.current_node = conn_idx
+				"rest":
+					var state_key = QState.encode_rest(run)
+					var choice = agent.choose_rest_action(run)
+					deckbuild_transitions.append({"state": state_key, "action": choice})
+					if choice == "rest":
+						run.player_hp = RestSite.rest(run.player_hp, run.player_max_hp)
+					else:
+						var upgradeable: Array = []
+						for i in run.deck.size():
+							if not run.deck[i].data.is_upgraded:
+								upgradeable.append(i)
+						if not upgradeable.is_empty():
+							var idx = upgradeable[rng.randi_range(0, upgradeable.size() - 1)]
+							run.deck[idx].data = CardUpgrade.upgrade(run.deck[idx].data)
 
-	return _make_result("victory", 10, deckbuild_transitions, run)
+				"event":
+					var events = EventSystem.get_event_list()
+					var event_id = events[rng.randi_range(0, events.size() - 1)]
+					var choices = EventSystem.get_choices(event_id)
+					var choice = choices[rng.randi_range(0, choices.size() - 1)]
+					var data := {
+						"hp": run.player_hp, "max_hp": run.player_max_hp,
+						"gold": run.gold, "relics": run.relics, "deck": run.deck,
+					}
+					EventSystem.execute_choice(event_id, choice["id"], data, rng.randi())
+					run.player_hp = data["hp"]
+					run.gold = maxi(data["gold"], 0)
+					if run.player_hp <= 0:
+						return _make_result("defeat", global_layer, deckbuild_transitions, run)
+
+			if layer_idx < 9:
+				var source = run.map.layers[layer_idx][run.current_node]
+				if source.connections.is_empty():
+					break
+				var next_layer_nodes = run.map.layers[layer_idx + 1]
+				var conn_idx = agent.choose_map_path(run, source.connections, next_layer_nodes)
+				var state_key = QState.encode_map(run)
+				var node_type := "combat"
+				if conn_idx < next_layer_nodes.size():
+					node_type = next_layer_nodes[conn_idx].node_type
+				deckbuild_transitions.append({"state": state_key, "action": node_type + ":" + str(conn_idx)})
+				run.current_node = conn_idx
+
+	return _make_result("victory", 30, deckbuild_transitions, run)
 
 ## Simulate a single combat with Q-learning updates.
 static func _simulate_combat_with_learning(run: RunData, enemy_datas: Array[EnemyData], agent: QAgent) -> bool:
@@ -230,14 +236,18 @@ static func _simulate_combat_with_learning(run: RunData, enemy_datas: Array[Enem
 	RelicSystem.apply_combat_start(state, run.relics)
 
 	var draw_count = RelicSystem.get_draw_count(5, run.relics)
+	var first_turn_bonus = RelicSystem.get_first_turn_bonus_draw(run.relics)
 	var max_turns := 50
 	var last_state_key := ""
 	var last_action := ""
+	var turn_num := 0
 
 	for _turn in max_turns:
 		if state.is_combat_over:
 			break
-		BattleManager.begin_player_turn(state, draw_count)
+		var this_draw = draw_count + first_turn_bonus if turn_num == 0 else draw_count
+		BattleManager.begin_player_turn(state, this_draw)
+		turn_num += 1
 
 		var max_plays := 20
 		for _play in max_plays:

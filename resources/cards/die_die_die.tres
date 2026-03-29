@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/cards/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+card_name = "Die Die Die"
+cost = 1
+card_type = "Attack"
+rarity = "Rare"
+base_damage = 13
+base_block = 0
+effect_text = "Deal 13 damage to ALL enemies. Exhaust."
+keywords = ["Exhaust"]
+is_upgraded = false
+target_mode = "aoe"
+character_class = "Silent"

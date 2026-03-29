@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/cards/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+card_name = "Crippling Cloud"
+cost = 2
+card_type = "Skill"
+rarity = "Uncommon"
+base_damage = 0
+base_block = 0
+effect_text = "Apply 4 Poison and 2 Weak to ALL enemies. Exhaust."
+keywords = ["Exhaust"]
+is_upgraded = false
+target_mode = "self"
+character_class = "Silent"
+poison_amount = 4
+weak_amount = 2

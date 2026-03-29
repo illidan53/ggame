@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/enemies/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "Assassin"
+hp = 60
+pattern = [{"type": "attack", "value": 14}, {"type": "attack_debuff", "value": 10, "debuff": "Weak", "debuff_stacks": 2}, {"type": "attack", "value": 18}]
+alt_pattern = [{"type": "attack", "value": 22}, {"type": "attack", "value": 22}]
+hp_threshold_percent = 0.3

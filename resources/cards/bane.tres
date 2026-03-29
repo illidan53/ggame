@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/cards/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+card_name = "Bane"
+cost = 1
+card_type = "Attack"
+rarity = "Common"
+base_damage = 7
+base_block = 0
+effect_text = "Deal 7 damage. If enemy has Poison, deal 7 again."
+keywords = []
+is_upgraded = false
+target_mode = "single"
+character_class = "Silent"
+special_effect = "bane"

@@ -159,11 +159,11 @@ func test_T6_1_random_report_has_metrics():
 	var report = BalanceRunner.run_random(100, 42)
 	assert_eq(report["strategy"], "random")
 	assert_true(report["metrics"].has("win_rate"))
-	assert_true(report["metrics"].has("survive_layer_3"))
+	assert_true(report["metrics"].has("survive_act1"))
 
 func test_T6_2_balance_config_check():
-	var metrics = {"win_rate": 0.10, "survive_layer_3": 0.80, "survive_layer_6": 0.50,
-		"survive_layer_9": 0.25, "reach_boss": 0.20, "boss_kill_rate": 0.40, "avg_death_layer": 6.0}
+	var metrics = {"win_rate": 0.03, "survive_act1": 0.05, "survive_act2": 0.01,
+		"reach_boss": 0.005, "boss_kill_rate": 0.50, "avg_death_layer": 6.0}
 	var check = BalanceConfig.check_expectations("random", metrics)
 	assert_true(check["passed"], "All-in-range metrics should pass")
 

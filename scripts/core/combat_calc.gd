@@ -14,10 +14,13 @@ static func calculate_damage(base: int, strength: int, is_weak: bool, is_vulnera
 		dmg = int(floor(dmg * 1.5))
 	return dmg
 
-## Apply calculated damage to a target, accounting for block
+## Apply calculated damage to a target, accounting for block and Intangible.
+## Intangible reduces all damage to 1.
 static func apply_damage_to_target(target: Combatant, damage: int) -> void:
 	if damage <= 0:
 		return
+	if target.has_status("Intangible"):
+		damage = 1
 	if target.block >= damage:
 		target.block -= damage
 	else:

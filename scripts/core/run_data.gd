@@ -7,24 +7,39 @@ var player_hp: int = 80
 var player_max_hp: int = 80
 var gold: int = 0
 var deck: Array[CardInstance] = []
-var relics: Array[String] = []  # Relic names (placeholder until P3)
-var potions: Array[String] = []  # Potion names (placeholder until P3)
+var relics: Array[String] = []
+var potions: Array[String] = []
 var map: MapData = null
 var current_layer: int = -1
 var current_node: int = 0
 var seed_value: int = 0
+var character_class: String = "Warrior"
+var current_act: int = 1       # 1-3, three acts per full run
+const TOTAL_ACTS: int = 3
 
-## Create a fresh run
-static func create_new(seed_val: int = 0) -> RunData:
+## Create a fresh run. Defaults to Warrior for backward compatibility.
+static func create_new(seed_val: int = 0, class_name_str: String = "Warrior") -> RunData:
 	var data = RunData.new()
 	if seed_val == 0:
 		seed_val = randi()
 	data.seed_value = seed_val
+	data.character_class = class_name_str
 	data.map = MapGenerator.generate(seed_val)
-	data.deck = _make_starting_deck()
+
+	var class_config = ClassData.get_class_config(class_name_str)
+	if not class_config.is_empty():
+		data.player_hp = class_config["max_hp"]
+		data.player_max_hp = class_config["max_hp"]
+		data.deck = ClassData.make_starting_deck(class_name_str)
+		var starting_relic: String = class_config["starting_relic"]
+		if starting_relic != "":
+			data.relics.append(starting_relic)
+	else:
+		# Fallback to legacy Warrior deck
+		data.deck = _make_starting_deck()
 	return data
 
-## Build the starting deck: 5 Strike, 4 Defend, 1 Bash
+## Legacy starting deck builder (kept for backward compatibility)
 static func _make_starting_deck() -> Array[CardInstance]:
 	var strike = load("res://resources/cards/strike.tres") as CardData
 	var defend = load("res://resources/cards/defend.tres") as CardData

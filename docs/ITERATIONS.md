@@ -5,6 +5,24 @@
 
 ---
 
+## [I-024] P8: 3-act run structure with per-act enemies — 2026-03-28
+- **Phase**: P8 (3-act structure)
+- **Changes**: Expanded game from 1 act to 3 acts (30 total layers). Each act has unique normal/elite/boss enemies with escalating difficulty. Inter-act 30% HP healing. Updated all simulators (random + Q-learning) for 3-act runs. Act 2: Fungus/Bandit/Golem + Assassin + Crystal King boss. Act 3: Wraith/Demon/Dark Mage + Lich + Void Dragon boss.
+- **Files**: scripts/core/run_data.gd, scripts/core/run_simulator.gd, scripts/core/q_run_simulator.gd, scripts/core/balance_config.gd, scripts/core/balance_runner.gd, tests/test_balance.gd, tests/test_q_learning.gd, tests/test_balance_q.gd, tests/test_acts.gd, resources/enemies/{fungus,bandit,golem,assassin,crystal_king,wraith,demon,dark_mage,lich,void_dragon}.tres
+- **Tests**: 12 new tests added, 200/200 total passing
+- **Commit**: `c1c3e89`
+
+---
+
+## [I-023] P7: Silent character class + Poison mechanics — 2026-03-28
+- **Phase**: P7 (Silent character)
+- **Changes**: Added Silent class (70 HP, 12-card deck, Ring of the Snake relic). New mechanics: Poison (bypass block, decay), Intangible, Shiv tokens, Retain keyword, discard-from-hand, multi-hit attacks. Class system (ClassData) for Warrior/Silent. 25 Silent cards across common/uncommon/rare. Updated GDD with Silent sections.
+- **Files**: scripts/core/class_data.gd, scripts/core/status_effects.gd, scripts/core/combat_calc.gd, scripts/core/battle_manager.gd, scripts/core/targeting.gd, scripts/core/card_pile_manager.gd, scripts/core/relic_system.gd, scripts/core/run_data.gd, resources/cards/card_data.gd, tests/test_silent.gd, 28 new .tres card files, docs/GDD.md, docs/PLAN.md
+- **Tests**: 23 new tests added, 188/188 total passing
+- **Commit**: `c1c3e89`
+
+---
+
 ## [I-022] P6-QL: Q-learning balance analysis system — 2026-03-28
 - **Phase**: P6-QL (Q-learning balance)
 - **Changes**: Built multi-strategy balance testing framework with tabular Q-learning agent. Two Q-tables (combat + deckbuilding), epsilon-greedy policy, reward shaping. BalanceConfig stores expected ranges per strategy. BalanceRunner runs any strategy headless and produces comparison reports with card power rankings.

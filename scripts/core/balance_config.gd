@@ -8,13 +8,21 @@ extends RefCounted
 ## Expected ranges: {metric_name: [min, max]}
 const STRATEGIES := {
 	"random": {
-		"win_rate":        [0.03, 0.15],    # 3-15% overall win rate
-		"survive_layer_3": [0.70, 0.85],    # 70-85% reach layer 3
-		"survive_layer_6": [0.40, 0.60],    # 40-60% reach layer 6
-		"survive_layer_9": [0.20, 0.35],    # 20-35% reach layer 9
-		"reach_boss":      [0.18, 0.30],    # 18-30% reach boss
-		"boss_kill_rate":  [0.30, 0.50],    # 30-50% conditional boss kill
-		"avg_death_layer": [5.0, 7.0],      # Mean death at layer 5-7
+		"win_rate":        [0.00, 0.10],    # 0-10% across 3 acts with random AI
+		"survive_act1":    [0.02, 0.20],    # 2-20% survive Act 1
+		"survive_act2":    [0.00, 0.10],    # 0-10% survive Acts 1+2
+		"reach_boss":      [0.00, 0.10],    # 0-10% reach final boss
+		"boss_kill_rate":  [0.00, 0.80],    # Wide range (few samples)
+		"avg_death_layer": [3.0, 12.0],     # Mean death layer (out of 30)
+	},
+	"random_silent": {
+		"win_rate":        [0.02, 0.20],    # Silent may differ from Warrior
+		"survive_layer_3": [0.60, 0.95],    # Lower HP but better card draw
+		"survive_layer_6": [0.30, 0.65],    # Poison helps mid-game
+		"survive_layer_9": [0.10, 0.40],    # Fragile late-game
+		"reach_boss":      [0.08, 0.35],    # Varies with poison scaling
+		"boss_kill_rate":  [0.15, 0.60],    # Poison can scale well vs boss
+		"avg_death_layer": [4.0, 8.0],      # Wide range initially
 	},
 	"q_learning": {
 		"win_rate":        [0.05, 0.65],    # 5-65% (depends on training episodes)

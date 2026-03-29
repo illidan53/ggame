@@ -21,6 +21,13 @@ static func get_draw_count(base_draw: int, relics: Array[String]) -> int:
 		draw -= 1
 	return draw
 
+## Get bonus draw for the first turn only (Ring of the Snake: +2 on turn 1)
+static func get_first_turn_bonus_draw(relics: Array[String]) -> int:
+	var bonus := 0
+	if "Ring of the Snake" in relics:
+		bonus += 2
+	return bonus
+
 ## Get modified max energy based on relics
 static func get_max_energy(base_energy: int, relics: Array[String]) -> int:
 	var energy = base_energy

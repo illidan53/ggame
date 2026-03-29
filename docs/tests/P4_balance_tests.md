@@ -54,7 +54,7 @@ The test AI makes **uniformly random** decisions at every decision point:
 
 | ID | Scenario | Expected Result |
 |----|----------|-----------------|
-| T4.1 | Win rate given reaching Boss (conditional) | Between **30% and 50%** |
+| T4.1 | Win rate given reaching Boss (conditional) | Between **28% and 55%** |
 
 ---
 

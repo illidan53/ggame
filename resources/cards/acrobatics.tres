@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/cards/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+card_name = "Acrobatics"
+cost = 1
+card_type = "Skill"
+rarity = "Common"
+base_damage = 0
+base_block = 0
+effect_text = "Draw 3 cards. Discard 1 card."
+keywords = []
+is_upgraded = false
+target_mode = "self"
+character_class = "Silent"
+draw_amount = 3
+discard_amount = 1

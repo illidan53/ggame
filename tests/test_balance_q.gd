@@ -46,6 +46,6 @@ func test_T4_q_learning_learning_curve_improves():
 
 func test_T5_q_learning_metrics_complete():
 	var m = _report["metrics"]
-	for key in ["win_rate", "survive_layer_3", "survive_layer_6", "survive_layer_9",
+	for key in ["win_rate", "survive_act1", "survive_act2",
 		"reach_boss", "boss_kill_rate", "avg_death_layer"]:
 		assert_true(m.has(key), "Metrics should include %s" % key)

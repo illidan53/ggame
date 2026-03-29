@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/cards/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+card_name = "Corpse Explosion"
+cost = 2
+card_type = "Skill"
+rarity = "Rare"
+base_damage = 0
+base_block = 0
+effect_text = "Apply 6 Poison. When enemy dies, deal its max HP as damage to ALL enemies."
+keywords = []
+is_upgraded = false
+target_mode = "single"
+character_class = "Silent"
+poison_amount = 6
+special_effect = "corpse_explosion"

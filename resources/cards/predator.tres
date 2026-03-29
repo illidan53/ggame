@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/cards/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+card_name = "Predator"
+cost = 2
+card_type = "Attack"
+rarity = "Uncommon"
+base_damage = 15
+base_block = 0
+effect_text = "Deal 15 damage. Draw 2 extra cards next turn."
+keywords = []
+is_upgraded = false
+target_mode = "single"
+character_class = "Silent"
+draw_amount = 2

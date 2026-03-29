@@ -41,6 +41,8 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | P4-bal | Balance simulation | [P4_balance_tests.md](tests/P4_balance_tests.md) | ✅ Complete |
 | P5 | Save + UI polish + packaging | [P5_polish_tests.md](tests/P5_polish_tests.md) | ✅ Complete (core; 5.4-5.6 deferred) |
 | P6-QL | Q-learning balance analysis | test_q_learning.gd, test_balance_q.gd | ✅ Complete |
+| P7 | Silent character class | test_silent.gd | ✅ Complete |
+| P8 | 3-act structure + per-act enemies | test_acts.gd | ✅ Complete |
 
 ---
 
@@ -127,11 +129,11 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 
 | # | Task | Test Coverage | Done |
 |---|------|--------------|------|
-| 2.1 | Implement RunData (persistent state across nodes) | P2-T4 | ✅ |
-| 2.2 | Implement combat reward generator (gold, card picks, rarity) | P2-T1 | ✅ |
-| 2.3 | Implement shop logic (pricing, purchase, card removal) | P2-T2 | ✅ |
-| 2.4 | Implement rest site logic (heal 30%, upgrade card) | P2-T3 | ✅ |
-| 2.5 | Implement card upgrade system | P2-T3 | ✅ |
+| 2.1 | Implement RunData (persistent state across nodes) | P2-T5 | ✅ |
+| 2.2 | Implement combat reward generator (gold, card picks, rarity) | P2-T1, P2-T2 | ✅ |
+| 2.3 | Implement shop logic (pricing, purchase, card removal) | P2-T3 | ✅ |
+| 2.4 | Implement rest site logic (heal 30%, upgrade card) | P2-T4 | ✅ |
+| 2.5 | Implement card upgrade system | P2-T4 | ✅ |
 | 2.6 | Create extended warrior card pool resources (~15 cards) | P2-T1 | ✅ |
 | 2.7 | Build reward screen, shop screen, rest site screen | Manual test | ✅ |
 | 2.8 | Build summary screen (victory/defeat) | Manual test | ✅ |
@@ -188,6 +190,23 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | 5.4 | UI polish (animations, transitions) | Manual test | ⬜ (deferred — needs graphical UI) |
 | 5.5 | Audio integration | Manual test | ⬜ (deferred — needs audio assets) |
 | 5.6 | Windows export & packaging | Manual test | ⬜ (deferred — needs export templates) |
+
+---
+
+## P7 — Silent Character Class
+
+**Milestone**: Second playable class with unique mechanics (Poison, Shivs, Discard synergies)
+
+### Tasks
+
+| # | Task | Test Coverage | Done |
+|---|------|--------------|------|
+| 7.1 | Add Poison + Intangible status effects | test_silent T1, T2 | ✅ |
+| 7.2 | Add Discard, Retain, Shiv generation mechanics | test_silent T5 | ✅ |
+| 7.3 | Implement class system (ClassData, RunData class param) | test_silent T3 | ✅ |
+| 7.4 | Create Silent starter cards (Neutralize, Survivor, Shiv, Strike_S, Defend_S) | test_silent T3, T4 | ✅ |
+| 7.5 | Create Silent card pool (25 cards: common/uncommon/rare) | test_silent T4 | ✅ |
+| 7.6 | Simulator + balance integration (class-aware runs) | test_silent T6 | ✅ |
 
 ---
 

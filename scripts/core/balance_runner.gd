@@ -83,14 +83,13 @@ static func format_report(report: Dictionary) -> String:
 
 	var m: Dictionary = report["metrics"]
 	lines.append("")
-	lines.append("--- Key Metrics ---")
+	lines.append("--- Key Metrics (3-act run, 30 layers) ---")
 	lines.append("Win rate:          %.1f%%" % (m["win_rate"] * 100.0))
-	lines.append("Survive layer 3:   %.1f%%" % (m["survive_layer_3"] * 100.0))
-	lines.append("Survive layer 6:   %.1f%%" % (m["survive_layer_6"] * 100.0))
-	lines.append("Survive layer 9:   %.1f%%" % (m["survive_layer_9"] * 100.0))
-	lines.append("Reach boss:        %.1f%%" % (m["reach_boss"] * 100.0))
+	lines.append("Survive Act 1:     %.1f%%" % (m["survive_act1"] * 100.0))
+	lines.append("Survive Act 1+2:   %.1f%%" % (m["survive_act2"] * 100.0))
+	lines.append("Reach final boss:  %.1f%%" % (m["reach_boss"] * 100.0))
 	lines.append("Boss kill rate:    %.1f%%" % (m["boss_kill_rate"] * 100.0))
-	lines.append("Avg death layer:   %.1f" % m["avg_death_layer"])
+	lines.append("Avg death layer:   %.1f / 30" % m["avg_death_layer"])
 
 	# Expectation check
 	lines.append("")
@@ -133,27 +132,24 @@ static func format_comparison(comparison: Dictionary) -> String:
 # --- Internal helpers ---
 
 ## Extract standard metrics from raw simulation stats.
+## Global layers: Act 1 = 1-10, Act 2 = 11-20, Act 3 = 21-30.
 static func _extract_metrics(stats: Dictionary) -> Dictionary:
 	var total: int = stats["total"]
 	var deaths: Dictionary = stats.get("deaths_by_layer", {})
 
-	var deaths_before_3 := 0
-	var deaths_before_6 := 0
-	var deaths_before_9 := 0
+	var deaths_in_act1 := 0
+	var deaths_in_act1_2 := 0
 	for layer in deaths:
 		var count: int = deaths[layer]
-		if layer < 3:
-			deaths_before_3 += count
-		if layer < 6:
-			deaths_before_6 += count
-		if layer < 9:
-			deaths_before_9 += count
+		if layer <= 10:
+			deaths_in_act1 += count
+		if layer <= 20:
+			deaths_in_act1_2 += count
 
 	return {
 		"win_rate": stats["win_rate"],
-		"survive_layer_3": 1.0 - float(deaths_before_3) / float(maxi(total, 1)),
-		"survive_layer_6": 1.0 - float(deaths_before_6) / float(maxi(total, 1)),
-		"survive_layer_9": 1.0 - float(deaths_before_9) / float(maxi(total, 1)),
+		"survive_act1": 1.0 - float(deaths_in_act1) / float(maxi(total, 1)),
+		"survive_act2": 1.0 - float(deaths_in_act1_2) / float(maxi(total, 1)),
 		"reach_boss": float(stats["reached_boss"]) / float(maxi(total, 1)),
 		"boss_kill_rate": stats["boss_kill_rate"],
 		"avg_death_layer": stats["avg_depth"],

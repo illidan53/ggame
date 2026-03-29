@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/cards/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+card_name = "Shiv"
+cost = 0
+card_type = "Attack"
+rarity = "Common"
+base_damage = 4
+base_block = 0
+effect_text = "Deal 4 damage. Exhaust."
+keywords = ["Exhaust"]
+is_upgraded = false
+target_mode = "single"
+character_class = "Silent"
