@@ -65,9 +65,19 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
+          # Debug: verify key and host are set
+          echo "Host length: ${#HOST}"
+          echo "Key lines: $(wc -l < ~/.ssh/deploy_key)"
+
+          # Scan host key
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>&1 || echo "ssh-keyscan failed"
+
+          # Test SSH connection first
+          ssh -v -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=10 "$USER@$HOST" "echo SSH OK" 2>&1 || true
+
+          # Deploy
           rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=10" \
             build/web/ \
             "$USER@$HOST:/var/www/darkpath/"
