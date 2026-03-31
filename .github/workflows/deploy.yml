@@ -73,3 +73,18 @@ jobs:
           cd build/web && zip -r /tmp/darkpath-web.zip .
           aws s3 cp /tmp/darkpath-web.zip "s3://ggame-artifacts/${ARTIFACT}"
           echo "Uploaded s3://ggame-artifacts/${ARTIFACT}"
+
+      - name: Smoke Test
+        run: |
+          echo "Waiting 90s for EC2 cron to deploy..."
+          sleep 90
+          STATUS=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 10 https://ggame.nphunter.net/)
+          echo "HTTPS status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "Smoke test FAILED: expected 200, got $STATUS"
+            exit 1
+          fi
+          # Verify content type is HTML
+          CONTENT_TYPE=$(curl -s -I https://ggame.nphunter.net/ | grep -i content-type | head -1)
+          echo "$CONTENT_TYPE"
+          echo "Smoke test PASSED"
