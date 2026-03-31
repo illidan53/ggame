@@ -5,6 +5,15 @@
 
 ---
 
+## [I-025] P9: Web export + CardRegistry for export compatibility — 2026-03-30
+- **Phase**: P9 (Web deployment)
+- **Changes**: Created CardRegistry to replace DirAccess.open() scanning (fails in web/exported builds). Replaced 5 DirAccess scan sites with CardRegistry calls. Added web quit handling. Created export_presets.cfg for Godot HTML5 export. Built and tested web export (38MB wasm+pck).
+- **Files**: scripts/core/card_registry.gd (new), scripts/core/run_simulator.gd, scripts/core/class_data.gd, scripts/core/save_system.gd, scripts/core/event_system.gd, scenes/map/map_scene.gd, scenes/menu/main_menu.gd, export_presets.cfg (new)
+- **Tests**: 0 new (export-related), 200/200 total passing
+- **Commit**: `1a9c413`
+
+---
+
 ## [I-024] P8: 3-act run structure with per-act enemies — 2026-03-28
 - **Phase**: P8 (3-act structure)
 - **Changes**: Expanded game from 1 act to 3 acts (30 total layers). Each act has unique normal/elite/boss enemies with escalating difficulty. Inter-act 30% HP healing. Updated all simulators (random + Q-learning) for 3-act runs. Act 2: Fungus/Bandit/Golem + Assassin + Crystal King boss. Act 3: Wraith/Demon/Dark Mage + Lich + Void Dragon boss.

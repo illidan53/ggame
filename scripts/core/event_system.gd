@@ -54,16 +54,9 @@ static func execute_choice(event_id: String, choice_id: String, data: Dictionary
 ## Roll a random uncommon card name from the pool
 static func _roll_uncommon_card(rng: RandomNumberGenerator) -> String:
 	var pool: Array[String] = []
-	var dir = DirAccess.open("res://resources/cards/")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if file_name.ends_with(".tres"):
-				var card = load("res://resources/cards/" + file_name) as CardData
-				if card and card.rarity == "Uncommon":
-					pool.append(card.card_name)
-			file_name = dir.get_next()
+	for card in CardRegistry.get_all_cards():
+		if card.rarity == "Uncommon":
+			pool.append(card.card_name)
 	if pool.is_empty():
 		return "Unknown Card"
 	return pool[rng.randi_range(0, pool.size() - 1)]

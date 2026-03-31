@@ -30,19 +30,7 @@ static func load_game(path: String = DEFAULT_SAVE_PATH) -> RunData:
 	if not data is Dictionary:
 		return null
 
-	# Build card pool lookup for deserialization
-	var card_pool := {}
-	var dir = DirAccess.open("res://resources/cards/")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if file_name.ends_with(".tres"):
-				var card = load("res://resources/cards/" + file_name) as CardData
-				if card:
-					card_pool[card.card_name] = card
-			file_name = dir.get_next()
-
+	var card_pool = CardRegistry.get_card_lookup()
 	return RunData.from_dict(data, card_pool)
 
 ## Delete save file (permadeath)

@@ -548,15 +548,4 @@ func _auto_save() -> void:
 	SaveSystem.save_game(run)
 
 func _load_card_pool() -> Array[CardData]:
-	var pool: Array[CardData] = []
-	var dir = DirAccess.open("res://resources/cards/")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if file_name.ends_with(".tres"):
-				var card = load("res://resources/cards/" + file_name) as CardData
-				if card and card.card_name not in ["Strike", "Defend", "Bash"]:
-					pool.append(card)
-			file_name = dir.get_next()
-	return pool
+	return CardRegistry.get_non_starter_pool()

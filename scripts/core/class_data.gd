@@ -70,14 +70,4 @@ static func load_card_pool(class_name_str: String) -> Array[CardData]:
 		if card_data:
 			starter_names[card_data.card_name] = true
 
-	var dir = DirAccess.open("res://resources/cards/")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if file_name.ends_with(".tres"):
-				var card = load("res://resources/cards/" + file_name) as CardData
-				if card and card.character_class == pool_class and not starter_names.has(card.card_name):
-					pool.append(card)
-			file_name = dir.get_next()
-	return pool
+	return CardRegistry.get_class_pool(pool_class, starter_names)

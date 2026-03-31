@@ -43,6 +43,7 @@ godot --headless --script addons/gut/gut_cmdln.gd -gdir=res://tests/ -gexit
 | P6-QL | Q-learning balance analysis | test_q_learning.gd, test_balance_q.gd | ✅ Complete |
 | P7 | Silent character class | test_silent.gd | ✅ Complete |
 | P8 | 3-act structure + per-act enemies | test_acts.gd | ✅ Complete |
+| P9 | Web export + CardRegistry | — (export config) | ✅ Complete |
 
 ---
 

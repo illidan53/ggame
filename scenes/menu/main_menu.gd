@@ -59,4 +59,7 @@ func _on_input_submitted(text: String) -> void:
 			RunState.map = null  # Signal map scene to start fresh
 			get_tree().change_scene_to_file("res://scenes/map/map_scene.tscn")
 		"3", "quit", "exit":
-			get_tree().quit()
+			if OS.has_feature("web"):
+				output.text += "\n[color=gray]Close the browser tab to quit.[/color]"
+			else:
+				get_tree().quit()
