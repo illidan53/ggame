@@ -5,6 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   test-and-deploy:
     runs-on: ubuntu-latest
@@ -56,28 +60,16 @@ jobs:
           mkdir -p build/web
           godot --headless --export-release "Web" build/web/index.html
 
-      - name: Deploy to EC2
-        env:
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-          HOST: ${{ secrets.EC2_HOST }}
-          USER: ${{ secrets.EC2_USER }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
+      - name: Upload to S3
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-
-          # Debug: verify key and host are set
-          echo "Host length: ${#HOST}"
-          echo "Key lines: $(wc -l < ~/.ssh/deploy_key)"
-
-          # Scan host key
-          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>&1 || echo "ssh-keyscan failed"
-
-          # Test SSH connection first
-          ssh -v -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=10 "$USER@$HOST" "echo SSH OK" 2>&1 || true
-
-          # Deploy
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o ConnectTimeout=10" \
-            build/web/ \
-            "$USER@$HOST:/var/www/darkpath/"
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          ARTIFACT="web/darkpath-${TIMESTAMP}.zip"
+          cd build/web && zip -r /tmp/darkpath-web.zip .
+          aws s3 cp /tmp/darkpath-web.zip "s3://ggame-artifacts/${ARTIFACT}"
+          echo "Uploaded s3://ggame-artifacts/${ARTIFACT}"
