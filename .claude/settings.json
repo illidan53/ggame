@@ -24,6 +24,17 @@
             "statusMessage": "Running auto-tests..."
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -q 'git push'; then REPO=$(cd \"$(echo \"$CLAUDE_TOOL_INPUT\" | grep -oP '(?<=cd )[^ ;&&]+' || pwd)\" 2>/dev/null && gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || gh repo view --json nameWithOwner -q .nameWithOwner); echo \"Watching CI for $REPO...\"; sleep 5; RUN_ID=$(gh run list --repo \"$REPO\" --limit 1 --json databaseId --jq '.[0].databaseId'); gh run watch \"$RUN_ID\" --repo \"$REPO\" --exit-status 2>&1 || { echo \"GITHUB ACTIONS RUN FAILED for $REPO. Check: gh run view $RUN_ID --repo $REPO --log-failed\"; exit 1; }; echo \"CI passed for $REPO.\"; echo 'Running endpoint smoke test...'; sleep 5; STATUS=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 10 https://ggame.nphunter.net/); if [ \"$STATUS\" = '200' ]; then echo \"Endpoint smoke test PASSED (HTTP $STATUS)\"; else echo \"Endpoint smoke test FAILED (HTTP $STATUS)\"; exit 1; fi; fi",
+            "timeout": 600,
+            "statusMessage": "Watching GitHub Actions run..."
+          }
+        ]
       }
     ],
     "PreToolUse": [
