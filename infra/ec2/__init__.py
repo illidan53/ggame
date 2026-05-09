@@ -21,7 +21,7 @@ ami = ec2.get_ami(
     most_recent=True,
     owners=["amazon"],
     filters=[
-        {"name": "name", "values": ["al2023-ami-2023.*-x86_64"]},
+        {"name": "name", "values": ["al2023-ami-2023.*-arm64"]},
         {"name": "state", "values": ["available"]},
     ],
 )
@@ -96,7 +96,12 @@ dnf install -y docker nginx certbot python3-certbot-dns-route53 python3-certbot-
 
 if ! command -v aws >/dev/null 2>&1; then
     echo "[INFO] Installing AWS CLI v2..."
-    curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
+    case "$(uname -m)" in
+        aarch64|arm64) aws_arch="aarch64" ;;
+        x86_64|amd64) aws_arch="x86_64" ;;
+        *) echo "[ERROR] Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
+    esac
+    curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${aws_arch}.zip" -o /tmp/awscliv2.zip
     unzip -q /tmp/awscliv2.zip -d /tmp
     /tmp/aws/install
     rm -rf /tmp/aws /tmp/awscliv2.zip
@@ -248,7 +253,7 @@ def render_user_data(values: list[str]) -> str:
 user_data_script = pulumi.Output.all(ecr_repository.repository_url, registry_url).apply(render_user_data)
 
 instance = ec2.Instance("ggame-ec2",
-    instance_type="t3.medium",  # 2 vCPU, 4 GB RAM
+    instance_type="t4g.small",  # 2 vCPU, 2 GiB RAM, arm64 (Graviton)
     ami=ami.id,
     subnet_id=public_subnet.id,
     vpc_security_group_ids=[sg.id],
