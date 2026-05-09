@@ -20,3 +20,9 @@ export/
 # Claude Code
 .claude/plans/
 .claude/settings.local.json
+
+# Pulumi / Python (infra/)
+infra/__pycache__/
+infra/**/__pycache__/
+infra/venv/
+infra/*.pyc
