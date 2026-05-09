@@ -1,4 +1,4 @@
-name: ggame-infra
+name: ggame
 description: A minimal AWS Python Pulumi program
 runtime:
   name: python
